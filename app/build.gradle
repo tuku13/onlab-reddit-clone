@@ -88,6 +88,9 @@ dependencies {
     def glide_compose_version = "1.4.8"
     implementation "com.github.skydoves:landscapist-glide:$glide_compose_version"
 
-    def material3_version = "1.0.0-alpha07"
+    def material3_version = "1.0.0-alpha08"
     implementation "androidx.compose.material3:material3:$material3_version"
+
+    def accompanist_version = "0.23.1"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 }

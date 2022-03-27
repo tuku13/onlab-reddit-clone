@@ -11,6 +11,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val LightThemeColors = lightColorScheme(
 
@@ -82,6 +83,9 @@ fun AppTheme(
     } else {
         DarkThemeColors
     }
+
+	val systemUiController = rememberSystemUiController()
+	systemUiController.setSystemBarsColor(surface2)
 
     MaterialTheme(
         colorScheme = colors,

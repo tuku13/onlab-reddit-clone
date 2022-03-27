@@ -22,7 +22,9 @@ class MainActivity : ComponentActivity() {
                         onLogout = { isAuthenticated = false }
                     )
                 } else {
-                    AuthenticationScreen()
+                    AuthenticationScreen(
+                        onAuthentication = { isAuthenticated = true }
+                    )
                 }
             }
         }
