@@ -78,14 +78,17 @@ fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
+	val systemUiController = rememberSystemUiController()
+
     val colors = if (!useDarkTheme) {
+		Extended.surface2 = surface2_light
         LightThemeColors
     } else {
+		Extended.surface2 = surface2_dark
         DarkThemeColors
     }
 
-	val systemUiController = rememberSystemUiController()
-	systemUiController.setSystemBarsColor(surface2)
+	systemUiController.setSystemBarsColor(Extended.surface2)
 
     MaterialTheme(
         colorScheme = colors,
@@ -164,4 +167,5 @@ fun AppTheme(
 //}
 
 object Extended {
+	var surface2 = surface2_light
 }

@@ -1,6 +1,5 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.authentication
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -10,7 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import hu.tuku13.onlab_reddit_clone.ui.theme.surface2
+import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -38,7 +37,9 @@ fun AuthenticationScreen(
                         modifier = Modifier.padding(end = 16.dp)
                     )
                 },
-                backgroundColor = surface2 // MaterialTheme.colorScheme.surfaceVariant
+                backgroundColor = Extended.surface2
+                // backgroundColor = surface2
+                // backgroundColor = MaterialTheme.colorScheme.surfaceVariant
             )
         },
         content = {

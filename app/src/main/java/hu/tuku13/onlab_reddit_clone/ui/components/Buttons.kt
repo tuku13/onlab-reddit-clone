@@ -1,9 +1,11 @@
 package hu.tuku13.onlab_reddit_clone.ui.components
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import hu.tuku13.onlab_reddit_clone.ui.screen.authentication.TAG
 
 //TODO 3 féle gomb kék fehér ,zöld
@@ -34,6 +36,7 @@ fun OutlinedButton(
         onClick = onClick,
         shape = RoundedCornerShape(100.0f),
         colors = ButtonDefaults.outlinedButtonColors(),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {
         Text(
             text = text,

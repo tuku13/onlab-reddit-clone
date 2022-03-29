@@ -1,7 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.components
 
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
