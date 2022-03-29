@@ -38,8 +38,6 @@ fun AuthenticationScreen() {
                     )
                 },
                 backgroundColor = Extended.surface2
-                // backgroundColor = surface2
-                // backgroundColor = MaterialTheme.colorScheme.surfaceVariant
             )
         },
         content = {

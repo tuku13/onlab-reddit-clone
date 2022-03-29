@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import dagger.hilt.android.AndroidEntryPoint
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
+import hu.tuku13.onlab_reddit_clone.ui.screen.MainScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.authentication.AuthenticationScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.HomeScreen
 import hu.tuku13.onlab_reddit_clone.ui.theme.AppTheme
@@ -24,15 +25,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                // var isAuthenticated by remember { mutableStateOf(false) }
                 val userId = authenticationService.userId.observeAsState()
 
                 if (userId.value != 0) {
-                    HomeScreen(
-                        onLogout = {
-                            authenticationService.logout()
-                        }
-                    )
+                    MainScreen()
                 } else {
                     AuthenticationScreen()
                 }
