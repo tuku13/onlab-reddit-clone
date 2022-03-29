@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import hu.tuku13.onlab_reddit_clone.Constants
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.repository.PostRepository
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -34,4 +35,8 @@ class NetworkModule {
             .build()
             .create(RedditCloneApi::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun providePostRepository(api: RedditCloneApi) = PostRepository(api)
 }

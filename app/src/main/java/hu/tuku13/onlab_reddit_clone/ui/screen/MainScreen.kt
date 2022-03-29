@@ -13,6 +13,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -27,14 +29,16 @@ import hu.tuku13.onlab_reddit_clone.ui.screen.home.HomeScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.messages.MessagesScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
+import androidx.compose.runtime.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    var title by remember { mutableStateOf("Home") }
 
     Scaffold(
-        topBar = { TopBar() },
+        topBar = { TopBar(title) },
         bottomBar = {
             BottomBar(
                 items = listOf(
@@ -60,7 +64,15 @@ fun MainScreen() {
                     ),
                 ),
                 navController = navController,
-                onItemClick = { navController.navigate(it.route) }
+                onItemClick = {
+                    navController.navigate(it.route)
+                    when (it.route) {
+                        Routes.HOME_SCREEN -> title = "Home"
+                        Routes.PROFILE_SCREEN -> title = "Profile"
+                        Routes.MESSAGES_SCREEN -> title = "Message"
+                        Routes.CREATE_GROUP_SCREEN -> title = "Create New Group"
+                    }
+                }
             )
         },
         content = { paddingValues ->
@@ -87,11 +99,11 @@ fun MainScreen() {
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(title: String) {
     TopAppBar(
         title = {
             Text(
-                text = "Title",
+                text = title,
                 style = MaterialTheme.typography.titleLarge
             )
         },
