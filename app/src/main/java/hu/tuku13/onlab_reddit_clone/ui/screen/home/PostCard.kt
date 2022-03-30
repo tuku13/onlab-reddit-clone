@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.network.model.Post
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
+import java.util.*
+import kotlin.time.Duration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,14 +36,14 @@ fun PostCard(post: Post) {
             PostTitleBar(post = post)
 
             GlideImage(
-                imageModel = "https://picsum.photos/536/354",
+                imageModel = post.postImage,
                 modifier = Modifier.width(360.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = post.text,
+                text = post.title,
                 maxLines = 2,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -51,7 +53,7 @@ fun PostCard(post: Post) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32",
+                text = post.text,
                 maxLines = 5,
                 softWrap = true,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -72,7 +74,7 @@ fun PostTitleBar(post: Post) {
     ){
         // TODO Ez Group logo
         GlideImage(
-            imageModel = "https://picsum.photos/40",
+            imageModel = if(post.groupImage != "") post.groupImage else "https://picsum.photos/40",
             modifier = Modifier.padding(16.dp).clip(CircleShape).size(40.dp)
         )
 
@@ -81,7 +83,7 @@ fun PostTitleBar(post: Post) {
             modifier = Modifier.weight(1.0f)
         ) {
             Text(
-                text = "Group name",
+                text = post.groupName,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -90,7 +92,7 @@ fun PostTitleBar(post: Post) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "username",
+                    text = post.postedBy,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -98,7 +100,7 @@ fun PostTitleBar(post: Post) {
                 Spacer(modifier = Modifier.width(5.dp))
 
                 Text(
-                    text = "35m",
+                    text = "30m",//TODO timestamp
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodySmall,
                 )
@@ -124,8 +126,8 @@ fun PostActionBar(post: Post) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         LikeBar(
-            likes = 1100,
-            userOpinion = 1,
+            likes = post.likes,
+            userOpinion = post.userOpinion,
             like = {
                 // TODO ViewModel like fgv
             },
@@ -135,8 +137,8 @@ fun PostActionBar(post: Post) {
         )
 
         Comment(
-            comments = 1100,
-            userAlreadyCommented = false,
+            comments = post.comments,
+            userAlreadyCommented = post.userCommented,
             onClick = {
                 // TODO comment gombra kattintas lekezelese
             }

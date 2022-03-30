@@ -21,4 +21,15 @@ class PostRepository @Inject constructor(
             emptyList()
         }
     }
+
+    suspend fun getSubscribedPosts(userId: Long): List<Post> {
+        val response = api.getSubscribedPosts(userId)
+
+        return if(response.isSuccessful) {
+            response.body()!!
+        } else {
+            Log.d(TAG, "getPost Error: ${response.errorBody()}")
+            emptyList()
+        }
+    }
 }

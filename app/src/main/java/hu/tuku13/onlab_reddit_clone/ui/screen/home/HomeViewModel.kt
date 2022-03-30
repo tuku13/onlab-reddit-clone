@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
 
     fun getPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val posts = postRepository.getPosts()
+            val posts = postRepository.getSubscribedPosts(1) //TODO kicserélni másik id-re
             _posts.postValue(posts)
         }
     }
