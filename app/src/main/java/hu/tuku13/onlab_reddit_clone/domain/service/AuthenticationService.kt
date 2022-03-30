@@ -12,8 +12,8 @@ const val TAG = "AuthenticationService"
 class AuthenticationService @Inject constructor(
     private val api: RedditCloneApi
 ) {
-    private var _userId: MutableLiveData<Int> = MutableLiveData(0)
-    val userId: LiveData<Int>
+    private var _userId: MutableLiveData<Long> = MutableLiveData(0)
+    val userId: LiveData<Long>
         get() = _userId
 
     suspend fun login(username: String, password: String) {

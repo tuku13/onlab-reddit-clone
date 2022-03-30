@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val userId = authenticationService.userId.observeAsState()
 
-                if (userId.value != 0) {
+                if (userId.value != 0L) {
                     MainScreen()
                 } else {
                     AuthenticationScreen()

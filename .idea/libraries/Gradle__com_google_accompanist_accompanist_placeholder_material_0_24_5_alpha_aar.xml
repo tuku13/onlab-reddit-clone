@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.accompanist:accompanist-placeholder-material:0.24.5-alpha@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6debf419d202ddc9edfebeb3c93c1d42/transformed/accompanist-placeholder-material-0.24.5-alpha/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6debf419d202ddc9edfebeb3c93c1d42/transformed/accompanist-placeholder-material-0.24.5-alpha/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6debf419d202ddc9edfebeb3c93c1d42/transformed/accompanist-placeholder-material-0.24.5-alpha/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.accompanist/accompanist-placeholder-material/0.24.5-alpha/f4a113f145b21d6c139262646b1b7d2e19849f0b/accompanist-placeholder-material-0.24.5-alpha-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.accompanist/accompanist-placeholder-material/0.24.5-alpha/3229073a299cc8f63b112dcfc713f2697a01a1d0/accompanist-placeholder-material-0.24.5-alpha-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

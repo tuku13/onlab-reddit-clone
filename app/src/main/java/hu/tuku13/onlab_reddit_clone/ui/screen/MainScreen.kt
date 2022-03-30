@@ -69,7 +69,7 @@ fun MainScreen() {
                     when (it.route) {
                         Routes.HOME_SCREEN -> title = "Home"
                         Routes.PROFILE_SCREEN -> title = "Profile"
-                        Routes.MESSAGES_SCREEN -> title = "Message"
+                        Routes.MESSAGES_SCREEN -> title = "Messages"
                         Routes.CREATE_GROUP_SCREEN -> title = "Create New Group"
                     }
                 }

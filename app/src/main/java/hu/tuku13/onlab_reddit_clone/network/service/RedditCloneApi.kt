@@ -1,5 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.network.service
 
+import hu.tuku13.onlab_reddit_clone.network.model.CreateGroupForm
 import hu.tuku13.onlab_reddit_clone.network.model.Group
 import hu.tuku13.onlab_reddit_clone.network.model.LoginForm
 import hu.tuku13.onlab_reddit_clone.network.model.Post
@@ -12,11 +13,14 @@ interface RedditCloneApi {
     suspend fun getGroups(): NetworkResponse<List<Group>>
 
     @POST("/login")
-    suspend fun login(@Body loginForm: LoginForm): Response<Int>
+    suspend fun login(@Body loginForm: LoginForm): Response<Long>
 
     @GET("/groups/{group-id}/posts")
     suspend fun getPostsByGroup(@Path("group-id") groupId: Long): Response<List<Post>>
 
     @GET("/posts/subscribed")
     suspend fun getSubscribedPosts(@Query("user-id") userId: Long): Response<List<Post>>
+
+    @POST("/groups/new")
+    suspend fun createGroup(@Body form: CreateGroupForm): Response<Long>
 }

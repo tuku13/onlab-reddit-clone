@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
@@ -15,9 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.placeholder
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.network.model.Post
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
+import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 import java.util.*
 import kotlin.time.Duration
 
@@ -26,7 +30,14 @@ import kotlin.time.Duration
 fun PostCard(post: Post) {
     Card(
         containerColor = MaterialTheme.colorScheme.surface,
-        modifier = Modifier.padding(vertical = 8.dp),
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+//            .placeholder(
+//                visible = true,
+//                shape = RoundedCornerShape(12.dp),
+//                color = Extended.surface2
+//            )
+        ,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {
         Column(modifier = Modifier
@@ -72,7 +83,6 @@ fun PostTitleBar(post: Post) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.width(360.dp).height(72.dp)
     ){
-        // TODO Ez Group logo
         GlideImage(
             imageModel = if(post.groupImage != "") post.groupImage else "https://picsum.photos/40",
             modifier = Modifier.padding(16.dp).clip(CircleShape).size(40.dp)
@@ -100,7 +110,7 @@ fun PostTitleBar(post: Post) {
                 Spacer(modifier = Modifier.width(5.dp))
 
                 Text(
-                    text = "30m",//TODO timestamp
+                    text = formatElapsedTime(post.timestamp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodySmall,
                 )
@@ -183,6 +193,23 @@ fun LikeBar(
             modifier = Modifier.clickable { dislike() },
             tint = if(userOpinion == -1) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+fun formatElapsedTime(time: Long): String {
+    val now = System.currentTimeMillis()
+    val elapsed = now - time
+
+    val elapsedInMinutes = elapsed / (1000 * 60)
+
+    return if (elapsedInMinutes <= 60) {
+        "${elapsedInMinutes}m"
+    }
+    else if(elapsedInMinutes > 60 || elapsedInMinutes <= 24 * 60) {
+        "${elapsedInMinutes / 60}h"
+    }
+    else {
+        "${elapsedInMinutes / (60 *24)}d"
     }
 }
 

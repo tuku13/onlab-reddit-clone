@@ -1,9 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.home
 
-import android.widget.Space
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -13,6 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
 import hu.tuku13.onlab_reddit_clone.ui.components.ChipGroup
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,20 +28,26 @@ fun HomeScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         val posts = viewModel.posts.observeAsState()
+        val isRefreshing = viewModel.isRefreshing.observeAsState()
 
-        LazyColumn {
-            item {
-                ChipGroup(
-                    newOnClick = { },
-                    topOnClick = { },
-                    trendingOnClick = { }
-                )
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value!!),
+            onRefresh = { viewModel.refresh() }
+        ) {
+            LazyColumn {
+                item {
+                    ChipGroup(
+                        newOnClick = { viewModel.setSorting(PostSorting.NEW) },
+                        topOnClick = { viewModel.setSorting(PostSorting.TOP) },
+                        trendingOnClick = { viewModel.setSorting(PostSorting.TRENDING) }
+                    )
 
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
-            items(posts.value?.size ?: 0) { index ->
-                PostCard(post = posts.value!![index])
+                items(posts.value?.size ?: 0) { index ->
+                    PostCard(post = posts.value!![index])
+                }
             }
         }
 
