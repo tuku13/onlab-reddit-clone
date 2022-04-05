@@ -22,12 +22,18 @@ class ConversationViewModel @Inject constructor(
     val messages: LiveData<List<Message>>
         get() = _messages
 
+    private var _isRefreshing: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean>
+        get() = _isRefreshing
+
     fun refreshMessages(partnerId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            val messages = messageRepository.getMessages(GetMessageForm(
-                from = authenticationService.userId.value ?: 0L,
-                to = partnerId
-            ))
+            val messages = messageRepository.getMessages(
+                GetMessageForm(
+                    from = authenticationService.userId.value ?: 0L,
+                    to = partnerId
+                )
+            )
 
             _messages.postValue(messages)
         }
