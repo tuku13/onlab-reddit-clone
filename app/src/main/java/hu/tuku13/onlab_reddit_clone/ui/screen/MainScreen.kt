@@ -1,5 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -38,7 +39,9 @@ import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
 fun MainScreen() {
     val navController = rememberNavController()
     var title by remember { mutableStateOf("Home") }
+
     var canPop by remember { mutableStateOf(false) }
+    var showBottomBar by remember { mutableStateOf(false) }
 
     navController.addOnDestinationChangedListener { controller, _, _ ->
         val backStackEntry = controller.currentBackStackEntry
@@ -55,6 +58,11 @@ fun MainScreen() {
             }
         }
 
+        if (backStackEntry != null) {
+//            Log.d("BottomBar", "${backStackEntry.destination.route} vs. ${Routes.CONVERSATION_SCREEN}/{partnerUserId}")
+            showBottomBar = backStackEntry.destination.route != "${Routes.CONVERSATION_SCREEN}/{partnerUserId}"
+        }
+
     }
 
     Scaffold(
@@ -66,40 +74,43 @@ fun MainScreen() {
             )
         },
         bottomBar = {
-            BottomBar(
-                items = listOf(
-                    BottomNavItem(
-                        "Home",
-                        Routes.HOME_SCREEN,
-                        Icons.Outlined.Home
+            if(showBottomBar) {
+                BottomBar(
+                    items = listOf(
+                        BottomNavItem(
+                            "Home",
+                            Routes.HOME_SCREEN,
+                            Icons.Outlined.Home
+                        ),
+                        BottomNavItem(
+                            "Create Group",
+                            Routes.CREATE_GROUP_SCREEN,
+                            Icons.Default.Add
+                        ),
+                        BottomNavItem(
+                            "Messages",
+                            Routes.MESSAGES_SCREEN,
+                            Icons.Default.ChatBubbleOutline
+                        ),
+                        BottomNavItem(
+                            "Profile",
+                            Routes.PROFILE_SCREEN,
+                            Icons.Default.PersonOutline
+                        ),
                     ),
-                    BottomNavItem(
-                        "Create Group",
-                        Routes.CREATE_GROUP_SCREEN,
-                        Icons.Default.Add
-                    ),
-                    BottomNavItem(
-                        "Messages",
-                        Routes.MESSAGES_SCREEN,
-                        Icons.Default.ChatBubbleOutline
-                    ),
-                    BottomNavItem(
-                        "Profile",
-                        Routes.PROFILE_SCREEN,
-                        Icons.Default.PersonOutline
-                    ),
-                ),
-                navController = navController,
-                onItemClick = {
-                    navController.navigate(it.route)
-                    when (it.route) {
-                        Routes.HOME_SCREEN -> title = "Home"
-                        Routes.PROFILE_SCREEN -> title = "Profile"
-                        Routes.MESSAGES_SCREEN -> title = "Messages"
-                        Routes.CREATE_GROUP_SCREEN -> title = "Create New Group"
+                    navController = navController,
+                    onItemClick = {
+                        navController.navigate(it.route)
+                        when (it.route) {
+                            Routes.HOME_SCREEN -> title = "Home"
+                            Routes.PROFILE_SCREEN -> title = "Profile"
+                            Routes.MESSAGES_SCREEN -> title = "Messages"
+                            Routes.CREATE_GROUP_SCREEN -> title = "Create New Group"
+                        }
                     }
-                }
-            )
+                )
+            }
+
         },
         content = { paddingValues ->
             NavHost(
