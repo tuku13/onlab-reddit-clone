@@ -2,13 +2,15 @@ package hu.tuku13.onlab_reddit_clone.ui.screen.conversation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -23,7 +25,7 @@ fun ConversationScreen(
     val isRefreshing = viewModel.isRefreshing.observeAsState()
 
     LaunchedEffect(key1 = Any()) {
-        viewModel.refreshMessages(partnerUserId)
+        viewModel.getMessages(partnerUserId)
     }
 
     Column(
@@ -46,7 +48,6 @@ fun ConversationScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start,
                 reverseLayout = true,
-
             ) {
 
                 items(messages.value?.size ?: 0) { index ->

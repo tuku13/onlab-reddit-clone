@@ -10,6 +10,7 @@ import hu.tuku13.onlab_reddit_clone.network.model.GetMessageForm
 import hu.tuku13.onlab_reddit_clone.network.model.Message
 import hu.tuku13.onlab_reddit_clone.repository.MessageRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +28,12 @@ class ConversationViewModel @Inject constructor(
         get() = _isRefreshing
 
     fun refreshMessages(partnerId: Long) {
+        _messages.value = emptyList()
+        _isRefreshing.value = true
+        getMessages(partnerId)
+    }
+
+    fun getMessages(partnerId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             val messages = messageRepository.getMessages(
                 GetMessageForm(
@@ -35,7 +42,10 @@ class ConversationViewModel @Inject constructor(
                 )
             )
 
+            delay(1500)
+
             _messages.postValue(messages)
+            _isRefreshing.postValue(false)
         }
     }
 }
