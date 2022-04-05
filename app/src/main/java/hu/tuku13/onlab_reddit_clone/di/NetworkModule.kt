@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import hu.tuku13.onlab_reddit_clone.Constants
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.repository.GroupRepository
+import hu.tuku13.onlab_reddit_clone.repository.MessageRepository
 import hu.tuku13.onlab_reddit_clone.repository.PostRepository
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -44,4 +45,8 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideGroupRepository(api: RedditCloneApi) = GroupRepository(api)
+
+    @Singleton
+    @Provides
+    fun provideMessageRepository(api: RedditCloneApi) = MessageRepository(api)
 }

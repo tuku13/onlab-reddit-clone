@@ -5,4 +5,5 @@ object Routes {
     const val CREATE_GROUP_SCREEN = "create_group_screen"
     const val MESSAGES_SCREEN = "messages_screen"
     const val PROFILE_SCREEN = "profile_screen"
+    const val CONVERSATION_SCREEN = "conversation_screen"
 }

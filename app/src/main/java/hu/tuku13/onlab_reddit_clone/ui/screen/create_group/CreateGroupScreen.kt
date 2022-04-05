@@ -82,6 +82,8 @@ fun CreateGroupScreen() {
     }
 }
 
+//TODO darkmodeban a placeholder kép jobb és bal szélén sem jó a border
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageUploader(
@@ -114,7 +116,7 @@ fun ImageUploader(
                         painter = painterResource(R.drawable.upload_image_placeholder),
                         contentDescription = "Uploaded image",
                         contentScale = ContentScale.FillWidth,
-//                        modifier = Modifier.width(360.dp)
+                        modifier = Modifier.width(360.dp)
                     ),
                     modifier = Modifier.width(360.dp)
                 )

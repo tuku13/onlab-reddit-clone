@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.outlined.Home
@@ -17,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -30,15 +30,41 @@ import hu.tuku13.onlab_reddit_clone.ui.screen.messages.MessagesScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 import androidx.compose.runtime.*
+import androidx.navigation.*
+import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     var title by remember { mutableStateOf("Home") }
+    var canPop by remember { mutableStateOf(false) }
+
+    navController.addOnDestinationChangedListener { controller, _, _ ->
+        val backStackEntry = controller.currentBackStackEntry
+
+        canPop = if (backStackEntry == null) {
+            false
+        } else {
+            when (backStackEntry.destination.route) {
+                Routes.HOME_SCREEN,
+                Routes.CREATE_GROUP_SCREEN,
+                Routes.MESSAGES_SCREEN,
+                Routes.PROFILE_SCREEN -> false
+                else -> true
+            }
+        }
+
+    }
 
     Scaffold(
-        topBar = { TopBar(title) },
+        topBar = {
+            TopBar(
+                title = title,
+                canPop = canPop,
+                navController = navController
+            )
+        },
         bottomBar = {
             BottomBar(
                 items = listOf(
@@ -88,10 +114,24 @@ fun MainScreen() {
                     CreateGroupScreen()
                 }
                 composable(Routes.MESSAGES_SCREEN) {
-                    MessagesScreen()
+                    MessagesScreen(navController)
                 }
                 composable(Routes.PROFILE_SCREEN) {
                     ProfileScreen()
+                }
+                composable(
+                    route = "${Routes.CONVERSATION_SCREEN}/{partnerUserId}",
+                    arguments = listOf(
+                        navArgument("partnerUserId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) {
+                    val partnerUserId = it.arguments?.getLong("partnerUserId") ?: 0L
+                    ConversationScreen(
+                        partnerUserId = partnerUserId,
+                        navController = navController
+                    )
                 }
             }
         }
@@ -99,17 +139,37 @@ fun MainScreen() {
 }
 
 @Composable
-fun TopBar(title: String) {
-    TopAppBar(
-        title = {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge
-            )
-        },
-        elevation = 0.dp,
-        backgroundColor = Extended.surface2
-    )
+fun TopBar(title: String, navController: NavController, canPop: Boolean) {
+    if (canPop) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+            },
+            elevation = 0.dp,
+            backgroundColor = Extended.surface2
+        )
+    } else {
+        TopAppBar(
+            title = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            },
+            elevation = 0.dp,
+            backgroundColor = Extended.surface2
+        )
+    }
+
+
 }
 
 @Composable

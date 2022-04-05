@@ -1,9 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.network.service
 
-import hu.tuku13.onlab_reddit_clone.network.model.CreateGroupForm
-import hu.tuku13.onlab_reddit_clone.network.model.Group
-import hu.tuku13.onlab_reddit_clone.network.model.LoginForm
-import hu.tuku13.onlab_reddit_clone.network.model.Post
+import hu.tuku13.onlab_reddit_clone.network.model.*
 import hu.tuku13.onlab_reddit_clone.util.NetworkResponse
 import retrofit2.Response
 import retrofit2.http.*
@@ -23,4 +20,14 @@ interface RedditCloneApi {
 
     @POST("/groups/new")
     suspend fun createGroup(@Body form: CreateGroupForm): Response<Long>
+
+    @FormUrlEncoded
+    @POST("/contacts")
+    suspend fun getContacts(@Field("user-id") userId: Long) : Response<List<Contact>>
+
+    @POST("/messages/send")
+    suspend fun sendMessage(@Body form: MessageForm) : Response<Long>
+
+    @POST("/messages/")
+    suspend fun getMessages(@Body form: GetMessageForm) : Response<List<Message>>
 }
