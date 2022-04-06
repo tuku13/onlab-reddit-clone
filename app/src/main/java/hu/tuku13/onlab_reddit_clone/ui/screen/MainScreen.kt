@@ -32,6 +32,7 @@ import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 import androidx.compose.runtime.*
 import androidx.navigation.*
+import hu.tuku13.onlab_reddit_clone.network.model.Contact
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,8 +60,7 @@ fun MainScreen() {
         }
 
         if (backStackEntry != null) {
-//            Log.d("BottomBar", "${backStackEntry.destination.route} vs. ${Routes.CONVERSATION_SCREEN}/{partnerUserId}")
-            showBottomBar = backStackEntry.destination.route != "${Routes.CONVERSATION_SCREEN}/{partnerUserId}"
+            showBottomBar = backStackEntry.destination.route != "${Routes.CONVERSATION_SCREEN}/{partnerUserId}/{partnerUserName}/{partnerProfileImageUrl}"
         }
 
     }
@@ -131,18 +131,26 @@ fun MainScreen() {
                     ProfileScreen()
                 }
                 composable(
-                    route = "${Routes.CONVERSATION_SCREEN}/{partnerUserId}",
+                    route = "${Routes.CONVERSATION_SCREEN}/{partnerUserId}/{partnerUserName}/{partnerProfileImageUrl}",
                     arguments = listOf(
                         navArgument("partnerUserId") {
                             type = NavType.LongType
+                        },
+                        navArgument("partnerUserName") {
+                            type = NavType.StringType
+                        },
+                        navArgument("partnerProfileImageUrl") {
+                            type = NavType.StringType
                         }
                     )
                 ) {
                     val partnerUserId = it.arguments?.getLong("partnerUserId") ?: 0L
-                    ConversationScreen(
-                        partnerUserId = partnerUserId,
-                        navController = navController
-                    )
+                    val partnerUserName = it.arguments?.getString("partnerUserName") ?: ""
+                    val partnerProfileImageUrl = it.arguments?.getString("partnerProfileImageUrl") ?: ""
+
+                    title = partnerUserName
+
+                    ConversationScreen(partnerUserId, partnerUserName, partnerProfileImageUrl)
                 }
             }
         }

@@ -14,7 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChatTextField() {
+fun ChatTextField(
+    onSubmit: (String) -> Unit
+) {
     var text by remember { mutableStateOf("") }
 
     TextField(
@@ -41,8 +43,8 @@ fun ChatTextField() {
             .padding(16.dp),
         trailingIcon = {
             IconButton(onClick = {
+                onSubmit(text)
                 text = ""
-                // TODO send message
             }) {
                 Icon(
                     imageVector = Icons.Default.Send,

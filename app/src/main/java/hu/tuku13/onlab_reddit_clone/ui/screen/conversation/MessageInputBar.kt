@@ -9,7 +9,9 @@ import androidx.compose.ui.unit.dp
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 
 @Composable
-fun MessageInputBar() {
+fun MessageInputBar(
+    onSubmit: (String) -> Unit
+) {
     Row(
         modifier = Modifier
             .defaultMinSize(minHeight = 80.dp)
@@ -19,6 +21,6 @@ fun MessageInputBar() {
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ChatTextField()
+        ChatTextField(onSubmit = onSubmit)
     }
 }

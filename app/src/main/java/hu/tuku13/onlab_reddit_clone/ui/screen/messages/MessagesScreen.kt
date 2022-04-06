@@ -19,6 +19,8 @@ import androidx.navigation.NavDirections
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.network.model.Contact
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Routes
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,9 +36,12 @@ fun MessagesScreen(
     ) {
         items(contacts.value?.size ?: 0) { index ->
             val contact = contacts.value!![index]
+            val profileImageUrl = if (contact.profileImageUrl != "") contact.profileImageUrl else "https://picsum.photos/40"
+            val encodedURL = URLEncoder.encode(profileImageUrl, StandardCharsets.UTF_8.toString())
+
             ContactCard(
                 contact = contact,
-                onClick = { navController.navigate("${Routes.CONVERSATION_SCREEN}/$it") }
+                onClick = { navController.navigate("${Routes.CONVERSATION_SCREEN}/$it/${contact.name}/$encodedURL") }
             )
         }
     }

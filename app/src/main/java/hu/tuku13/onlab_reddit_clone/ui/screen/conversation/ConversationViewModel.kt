@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.GetMessageForm
 import hu.tuku13.onlab_reddit_clone.network.model.Message
+import hu.tuku13.onlab_reddit_clone.network.model.MessageForm
 import hu.tuku13.onlab_reddit_clone.repository.MessageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -27,25 +28,39 @@ class ConversationViewModel @Inject constructor(
     val isRefreshing: LiveData<Boolean>
         get() = _isRefreshing
 
-    fun refreshMessages(partnerId: Long) {
+    var partnerUserId = 0L
+
+    fun refreshMessages() {
         _messages.value = emptyList()
         _isRefreshing.value = true
-        getMessages(partnerId)
+        getMessages()
     }
 
-    fun getMessages(partnerId: Long) {
+    fun getMessages() {
         viewModelScope.launch(Dispatchers.IO) {
             val messages = messageRepository.getMessages(
                 GetMessageForm(
                     from = authenticationService.userId.value ?: 0L,
-                    to = partnerId
+                    to = partnerUserId
                 )
             )
 
-            delay(1500)
-
             _messages.postValue(messages)
             _isRefreshing.postValue(false)
+        }
+    }
+
+    fun sendMessage(partnerUserName: String, message: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val success = messageRepository.sendMessage(MessageForm(
+                senderId = authenticationService.userId.value ?: 0,
+                recipientName = partnerUserName,
+                text = message
+            ))
+
+            if(success) {
+                getMessages()
+            }
         }
     }
 }
