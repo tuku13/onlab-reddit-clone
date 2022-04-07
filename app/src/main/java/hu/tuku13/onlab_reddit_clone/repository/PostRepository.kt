@@ -11,6 +11,17 @@ class PostRepository @Inject constructor(
 ){
     val TAG = "PostRepo"
 
+    suspend fun getUserPosts(userId: Long) : List<Post> {
+        val response = api.getUserPost(userId)
+
+        return if (response.isSuccessful) {
+            response.body()!!
+        } else {
+            return emptyList()
+//            throw Exception("Invalid user id. ${response.errorBody()}")
+        }
+    }
+
     suspend fun getPosts(): List<Post> {
         // TODO kicserélni másra ami nem csak 1 FIX csoporthoz az vissza posztot
         val response = api.getPostsByGroup(1)

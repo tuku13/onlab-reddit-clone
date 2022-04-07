@@ -32,12 +32,15 @@ import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 import androidx.compose.runtime.*
 import androidx.navigation.*
+import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.Contact
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    authenticationService: AuthenticationService
+) {
     val navController = rememberNavController()
     var title by remember { mutableStateOf("Home") }
 
@@ -128,7 +131,7 @@ fun MainScreen() {
                     MessagesScreen(navController)
                 }
                 composable(Routes.PROFILE_SCREEN) {
-                    ProfileScreen()
+                    ProfileScreen(userId = authenticationService.userId.value ?: 0L)
                 }
                 composable(
                     route = "${Routes.CONVERSATION_SCREEN}/{partnerUserId}/{partnerUserName}/{partnerProfileImageUrl}",

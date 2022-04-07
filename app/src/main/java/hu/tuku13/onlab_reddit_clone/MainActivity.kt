@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                 val userId = authenticationService.userId.observeAsState()
 
                 if (userId.value != 0L) {
-                    MainScreen()
+                    MainScreen(authenticationService)
                 } else {
                     AuthenticationScreen()
                 }

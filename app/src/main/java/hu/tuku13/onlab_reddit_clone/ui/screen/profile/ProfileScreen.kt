@@ -1,102 +1,48 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.skydoves.landscapist.glide.GlideImage
-import hu.tuku13.onlab_reddit_clone.network.model.User
-import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
-import hu.tuku13.onlab_reddit_clone.ui.components.OutlinedButton
+import hu.tuku13.onlab_reddit_clone.ui.screen.home.PostCard
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+    userId: Long
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
-    ) {
-        GlideImage(
-            imageModel = "https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg",
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.wrapContentHeight()
-        )
+    val user = viewModel.user.observeAsState()
+    val posts = viewModel.posts.observeAsState()
 
-        InfoCard(
-            User(
-                id = 0L,
-                name = "asd",
-                bio = "asddddddddddddddddddddddddddddddddddddgfdgoiuwtrguintrwiugnrtwiugbtnrguirnub",
-                profileImage = ""
-            )
-        )
-
-        // TODO user postjai
+    LaunchedEffect(key1 = Any()) {
+        viewModel.refresh(userId)
     }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InfoCard(
-    user: User
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        containerColor = MaterialTheme.colorScheme.surface
-    ) {
-        Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-            ) {
-
-                GlideImage(
-                    imageModel = if (user.profileImage == "") "https://picsum.photos/40" else user.profileImage,
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .clip(CircleShape)
-                        .size(40.dp)
+    posts.value?.let {
+        LazyColumn(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            item {
+                ProfileBannerImage(
+                    imageUrl = "https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg",
+                    onClick = {}
                 )
-
-                Text(
-                    text = user.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-
-                OutlinedButton(text = "Logout") {
-
-                }
-
-                FilledButton(text = "Edit Bio") {
-
-                }
             }
 
-            Text(
-                text = user.bio,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(16.dp)
-            )
+            item {
+                user.value?.let { InfoCard(it) }
+            }
+
+            items(it.size) { index ->
+                PostCard(post = it[index])
+            }
         }
     }
 }
+

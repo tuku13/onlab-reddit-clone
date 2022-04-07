@@ -23,11 +23,17 @@ interface RedditCloneApi {
 
     @FormUrlEncoded
     @POST("/contacts")
-    suspend fun getContacts(@Field("user-id") userId: Long) : Response<List<Contact>>
+    suspend fun getContacts(@Field("user-id") userId: Long): Response<List<Contact>>
 
     @POST("/messages/send")
-    suspend fun sendMessage(@Body form: MessageForm) : Response<Long>
+    suspend fun sendMessage(@Body form: MessageForm): Response<Long>
 
     @POST("/messages/")
-    suspend fun getMessages(@Body form: GetMessageForm) : Response<List<Message>>
+    suspend fun getMessages(@Body form: GetMessageForm): Response<List<Message>>
+
+    @GET("/users/{id}")
+    suspend fun getUserInfo(@Path("id") userId: Long): Response<User>
+
+    @GET("/users/{user-id}/posts")
+    suspend fun getUserPost(@Path("user-id") userId: Long): Response<List<Post>>
 }
