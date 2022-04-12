@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.PostCard
 
@@ -29,14 +30,20 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             item {
-                ProfileBannerImage(
-                    imageUrl = "https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg",
-                    onClick = {}
-                )
+                user.value?.let {
+                    ProfileBannerImage(
+                        imageUrl = it.profileImage,
+                        onClick = { }
+                    )
+                }
             }
 
             item {
                 user.value?.let { InfoCard(it) }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             items(it.size) { index ->
