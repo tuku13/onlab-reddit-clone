@@ -14,19 +14,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavDirections
 import com.skydoves.landscapist.glide.GlideImage
+import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.network.model.Contact
-import hu.tuku13.onlab_reddit_clone.ui.navigation.Routes
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun MessagesScreen(
-    navController: NavController,
+    navigationService: NavigationService,
     viewModel: MessagesViewModel = hiltViewModel()
 ) {
     val contacts = viewModel.contacts.observeAsState()
@@ -37,11 +34,16 @@ fun MessagesScreen(
         items(contacts.value?.size ?: 0) { index ->
             val contact = contacts.value!![index]
             val profileImageUrl = if (contact.profileImageUrl != "") contact.profileImageUrl else "https://picsum.photos/40"
-            val encodedURL = URLEncoder.encode(profileImageUrl, StandardCharsets.UTF_8.toString())
 
             ContactCard(
                 contact = contact,
-                onClick = { navController.navigate("${Routes.CONVERSATION_SCREEN}/$it/${contact.name}/$encodedURL") }
+                onClick = {
+                    navigationService.navigateTo(Route.ConversationRoute(
+                        partnerUserId = it,
+                        partnerUserName = contact.name,
+                        partnerProfileImageUrl = profileImageUrl
+                    ))
+                }
             )
         }
     }

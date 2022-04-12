@@ -1,140 +1,91 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen
 
-import android.util.Log
+import android.os.Bundle
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChatBubbleOutline
-import androidx.compose.material.icons.filled.PersonOutline
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import hu.tuku13.onlab_reddit_clone.ui.navigation.BottomNavItem
-import hu.tuku13.onlab_reddit_clone.ui.navigation.Routes
 import hu.tuku13.onlab_reddit_clone.ui.screen.create_group.CreateGroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.HomeScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.messages.MessagesScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
-import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.*
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
-import hu.tuku13.onlab_reddit_clone.network.model.Contact
+import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
+import hu.tuku13.onlab_reddit_clone.ui.scaffold.*
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    authenticationService: AuthenticationService
+    authenticationService: AuthenticationService,
+    navigationService: NavigationService
 ) {
     val navController = rememberNavController()
-    var title by remember { mutableStateOf("Home") }
 
-    var canPop by remember { mutableStateOf(false) }
-    var showBottomBar by remember { mutableStateOf(false) }
-
-    navController.addOnDestinationChangedListener { controller, _, _ ->
-        val backStackEntry = controller.currentBackStackEntry
-
-        canPop = if (backStackEntry == null) {
-            false
-        } else {
-            when (backStackEntry.destination.route) {
-                Routes.HOME_SCREEN,
-                Routes.CREATE_GROUP_SCREEN,
-                Routes.MESSAGES_SCREEN,
-                Routes.PROFILE_SCREEN -> false
-                else -> true
-            }
-        }
-
-        if (backStackEntry != null) {
-            showBottomBar = backStackEntry.destination.route != "${Routes.CONVERSATION_SCREEN}/{partnerUserId}/{partnerUserName}/{partnerProfileImageUrl}"
-        }
-
+    LaunchedEffect(key1 = navigationService) {
+        navigationService.navController = navController
     }
+
+    navController.addOnDestinationChangedListener(listener = { navController, navDestination, _ ->
+        navigationService.onPopBackStack(navDestination)
+    })
+
+    val route = navigationService.currentRoute.observeAsState(Route.HomeRoute)
 
     Scaffold(
         topBar = {
-            TopBar(
-                title = title,
-                canPop = canPop,
-                navController = navController
-            )
+            when (route.value) {
+                is Route.ConversationRoute -> SubScreenTopBar(
+                    title = route.value.title,
+                    navigationService = navigationService
+                )
+                is Route.HomeRoute -> HomeScreenTopBar(navigationService = navigationService)
+                is Route.SearchGroupRoute -> SearchGroupTopBar(navigationService = navigationService)
+                else -> BaseScreenTopBar(title = route.value.title)
+            }
         },
         bottomBar = {
-            if(showBottomBar) {
-                BottomBar(
-                    items = listOf(
-                        BottomNavItem(
-                            "Home",
-                            Routes.HOME_SCREEN,
-                            Icons.Outlined.Home
-                        ),
-                        BottomNavItem(
-                            "Create Group",
-                            Routes.CREATE_GROUP_SCREEN,
-                            Icons.Default.Add
-                        ),
-                        BottomNavItem(
-                            "Messages",
-                            Routes.MESSAGES_SCREEN,
-                            Icons.Default.ChatBubbleOutline
-                        ),
-                        BottomNavItem(
-                            "Profile",
-                            Routes.PROFILE_SCREEN,
-                            Icons.Default.PersonOutline
-                        ),
+            when (route.value) {
+                is Route.ConversationRoute -> {}
+                is Route.SearchGroupRoute -> {}
+                else -> BottomBar(
+                    routes = listOf(
+                        Route.HomeRoute,
+                        Route.CreateGroupRoute,
+                        Route.MessagesRoute,
+                        Route.ProfileRoute
                     ),
-                    navController = navController,
-                    onItemClick = {
-                        navController.navigate(it.route)
-                        when (it.route) {
-                            Routes.HOME_SCREEN -> title = "Home"
-                            Routes.PROFILE_SCREEN -> title = "Profile"
-                            Routes.MESSAGES_SCREEN -> title = "Messages"
-                            Routes.CREATE_GROUP_SCREEN -> title = "Create New Group"
-                        }
-                    }
+                    navigationService = navigationService,
                 )
             }
-
         },
         content = { paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Routes.HOME_SCREEN,
+                startDestination = Route.HomeRoute.route,
                 modifier = Modifier.padding(paddingValues)
             ) {
-                composable(Routes.HOME_SCREEN) {
+                composable(Route.HomeRoute.navigation) {
                     HomeScreen()
                 }
-                composable(Routes.CREATE_GROUP_SCREEN) {
+                composable(Route.CreateGroupRoute.navigation) {
                     CreateGroupScreen()
                 }
-                composable(Routes.MESSAGES_SCREEN) {
-                    MessagesScreen(navController)
+                composable(Route.MessagesRoute.navigation) {
+                    MessagesScreen(navigationService)
                 }
-                composable(Routes.PROFILE_SCREEN) {
+                composable(Route.ProfileRoute.navigation) {
                     ProfileScreen(userId = authenticationService.userId.value ?: 0L)
                 }
                 composable(
-                    route = "${Routes.CONVERSATION_SCREEN}/{partnerUserId}/{partnerUserName}/{partnerProfileImageUrl}",
+                    route = Route.ConversationRoute.navigation,
                     arguments = listOf(
                         navArgument("partnerUserId") {
                             type = NavType.LongType
@@ -149,93 +100,16 @@ fun MainScreen(
                 ) {
                     val partnerUserId = it.arguments?.getLong("partnerUserId") ?: 0L
                     val partnerUserName = it.arguments?.getString("partnerUserName") ?: ""
-                    val partnerProfileImageUrl = it.arguments?.getString("partnerProfileImageUrl") ?: ""
-
-                    title = partnerUserName
+                    val partnerProfileImageUrl =
+                        it.arguments?.getString("partnerProfileImageUrl") ?: ""
 
                     ConversationScreen(partnerUserId, partnerUserName, partnerProfileImageUrl)
+                }
+                composable(Route.SearchGroupRoute.navigation) {
+                    SearchGroupScreen()
                 }
             }
         }
     )
 }
 
-@Composable
-fun TopBar(title: String, navController: NavController, canPop: Boolean) {
-    if (canPop) {
-        TopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-            },
-            elevation = 0.dp,
-            backgroundColor = Extended.surface2
-        )
-    } else {
-        TopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge
-                )
-            },
-            elevation = 0.dp,
-            backgroundColor = Extended.surface2
-        )
-    }
-
-
-}
-
-@Composable
-fun BottomBar(
-    items: List<BottomNavItem>,
-    navController: NavController,
-    onItemClick: (BottomNavItem) -> Unit
-) {
-    val backStackEntry = navController.currentBackStackEntryAsState()
-
-    NavigationBar(
-
-    ) {
-        items.forEach { item ->
-            val selected = item.route == backStackEntry.value?.destination?.route ?: false
-
-            NavigationBarItem(
-                selected = selected,
-                alwaysShowLabel = true,
-                colors = NavigationBarItemDefaults.colors(
-
-                ),
-                label = {
-                    Text(
-                        text = item.name,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                },
-                onClick = { onItemClick(item) },
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.name,
-                    )
-                }
-            )
-        }
-    }
-
-//    BottomNavigation(
-//        backgroundColor = Extended.surface2,
-//        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-//        elevation = 0.dp
-//    ) {
-//
-//    }
-}

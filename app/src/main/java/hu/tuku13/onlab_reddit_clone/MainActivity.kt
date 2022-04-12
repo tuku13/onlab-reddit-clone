@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import dagger.hilt.android.AndroidEntryPoint
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
+import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.screen.MainScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.authentication.AuthenticationScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.HomeScreen
@@ -21,6 +22,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var authenticationService: AuthenticationService
 
+    @Inject
+    lateinit var navigationService: NavigationService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -28,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 val userId = authenticationService.userId.observeAsState()
 
                 if (userId.value != 0L) {
-                    MainScreen(authenticationService)
+                    MainScreen(authenticationService, navigationService)
                 } else {
                     AuthenticationScreen()
                 }
