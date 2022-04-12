@@ -1,6 +1,5 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen
 
-import android.os.Bundle
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -20,6 +19,7 @@ import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.scaffold.*
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +33,7 @@ fun MainScreen(
         navigationService.navController = navController
     }
 
-    navController.addOnDestinationChangedListener(listener = { navController, navDestination, _ ->
+    navController.addOnDestinationChangedListener(listener = { _, navDestination, _ ->
         navigationService.onPopBackStack(navDestination)
     })
 
@@ -47,7 +47,7 @@ fun MainScreen(
                     navigationService = navigationService
                 )
                 is Route.HomeRoute -> HomeScreenTopBar(navigationService = navigationService)
-                is Route.SearchGroupRoute -> SearchGroupTopBar(navigationService = navigationService)
+                is Route.SearchGroupRoute -> {  }
                 else -> BaseScreenTopBar(title = route.value.title)
             }
         },
@@ -106,7 +106,7 @@ fun MainScreen(
                     ConversationScreen(partnerUserId, partnerUserName, partnerProfileImageUrl)
                 }
                 composable(Route.SearchGroupRoute.navigation) {
-                    SearchGroupScreen()
+                    SearchGroupScreen(navigationService)
                 }
             }
         }

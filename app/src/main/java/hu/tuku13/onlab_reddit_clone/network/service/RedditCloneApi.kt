@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface RedditCloneApi {
     @GET("/groups")
-    suspend fun getGroups(): NetworkResponse<List<Group>>
+    suspend fun getGroups(): NetworkResponse<List<GroupDTO>>
 
     @POST("/login")
     suspend fun login(@Body loginForm: LoginForm): Response<Long>
@@ -36,4 +36,7 @@ interface RedditCloneApi {
 
     @GET("/users/{user-id}/posts")
     suspend fun getUserPost(@Path("user-id") userId: Long): Response<List<Post>>
+
+    @GET("/groups/search")
+    suspend fun getGroups(@Query("query") name: String): Response<List<GroupDTO>>
 }

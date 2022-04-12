@@ -1,9 +1,10 @@
 package hu.tuku13.onlab_reddit_clone.network.model
 
-data class Group(
+data class GroupDTO(
     val createdBy: Long = 0,
     val description: String = "",
     val groupImageUrl: String = "",
     val id: Long = 0,
-    val name: String = ""
+    val name: String = "",
+    val members: Int = 0
 )

@@ -1,12 +1,14 @@
 package hu.tuku13.onlab_reddit_clone.ui.components
 
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -20,7 +22,9 @@ fun TextField(
     singleLine: Boolean = true,
     label: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
-    width: Dp = 364.dp
+    width: Dp = 364.dp,
+    keyboardActions: KeyboardActions = KeyboardActions(),
+    imeAction: ImeAction = ImeAction.Default
 ) {
     androidx.compose.material.TextField(
         value = value,
@@ -38,8 +42,10 @@ fun TextField(
         visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else VisualTransformation.None,
         modifier = Modifier.width(width),
         keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = keyboardType
+            keyboardType = keyboardType,
+            imeAction = imeAction
         ),
+        keyboardActions = keyboardActions,
         label = {
             Text(
                 text = label,
