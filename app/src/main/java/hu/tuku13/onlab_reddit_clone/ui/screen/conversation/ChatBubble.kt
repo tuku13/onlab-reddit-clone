@@ -117,7 +117,6 @@ fun TextBubble(
             modifier = Modifier
                 .padding(8.dp)
                 .wrapContentWidth()
-                .padding(end = 16.dp)
         )
     }
 
