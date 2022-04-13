@@ -38,6 +38,7 @@ fun GroupCard(
             modifier = Modifier
                 .width(358.dp)
                 .height(200.dp)
+                .align(Alignment.CenterHorizontally)
         ) {
             GlideImage(
                 imageModel = group.groupImageUrl,

@@ -47,11 +47,5 @@ fun GroupTitleBar(group: GroupDTO) {
 
         }
 
-//        Icon(
-//            imageVector = Icons.Default.MoreVert,
-//            contentDescription = "Options",
-//            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-//            modifier = Modifier.padding(16.dp)
-//        )
     }
 }

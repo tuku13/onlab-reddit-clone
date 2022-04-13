@@ -61,10 +61,15 @@ sealed class Route(
         }
     }
 
-    class GroupRoute(groupName: String) : Route(
+    class GroupRoute(groupId: Long, groupName: String) : Route(
         title = groupName,
-        route = "home_screen"
-    )
+        route = "group/$groupId",
+        navigation = "group/{groupId}"
+    ) {
+        companion object {
+            const val navigation = "group/{groupId}"
+        }
+    }
 
     object SearchGroupRoute : Route(
         title = "",

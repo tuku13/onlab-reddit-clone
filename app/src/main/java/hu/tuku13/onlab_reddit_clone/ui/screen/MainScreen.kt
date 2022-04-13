@@ -13,13 +13,16 @@ import hu.tuku13.onlab_reddit_clone.ui.screen.messages.MessagesScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.scaffold.*
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.group.GroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +41,7 @@ fun MainScreen(
     })
 
     val route = navigationService.currentRoute.observeAsState(Route.HomeRoute)
+    val searchGroupViewModel: SearchGroupViewModel = hiltViewModel()
 
     Scaffold(
         topBar = {
@@ -46,8 +50,15 @@ fun MainScreen(
                     title = route.value.title,
                     navigationService = navigationService
                 )
+                is Route.GroupRoute -> SubScreenTopBar(
+                    title = route.value.title,
+                    navigationService = navigationService
+                )
+                is Route.SearchGroupRoute -> SearchGroupTopBar(
+                    navigationService = navigationService,
+                    viewModel = searchGroupViewModel
+                )
                 is Route.HomeRoute -> HomeScreenTopBar(navigationService = navigationService)
-                is Route.SearchGroupRoute -> {  }
                 else -> BaseScreenTopBar(title = route.value.title)
             }
         },
@@ -106,7 +117,21 @@ fun MainScreen(
                     ConversationScreen(partnerUserId, partnerUserName, partnerProfileImageUrl)
                 }
                 composable(Route.SearchGroupRoute.navigation) {
-                    SearchGroupScreen(navigationService)
+                    SearchGroupScreen(
+                        navigationService = navigationService,
+                        viewModel = searchGroupViewModel
+                    )
+                }
+                composable(
+                    route = Route.GroupRoute.navigation,
+                    arguments = listOf(
+                        navArgument("groupId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) {
+                    val groupId = it.arguments?.getLong("groupId") ?: 0L
+                    GroupScreen(groupId)
                 }
             }
         }
