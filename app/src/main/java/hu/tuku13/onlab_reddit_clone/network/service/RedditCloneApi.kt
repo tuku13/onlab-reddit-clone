@@ -42,4 +42,7 @@ interface RedditCloneApi {
 
     @GET("/groups/{id}")
     suspend fun getGroup(@Path("id") groupId: Long): Response<GroupDTO>
+
+    @POST("/groups/{group-id}/posts/new")
+    suspend fun createPost(@Path("group-id") groupId: Long, @Body form: PostFormDTO): Response<Long>
 }

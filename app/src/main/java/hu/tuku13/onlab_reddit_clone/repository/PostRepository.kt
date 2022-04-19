@@ -4,13 +4,16 @@ import android.util.Log
 import com.squareup.moshi.JsonDataException
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.User
+import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
+import hu.tuku13.onlab_reddit_clone.network.model.PostFormDTO
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import javax.inject.Inject
 
 class PostRepository @Inject constructor(
-    private val api: RedditCloneApi
+    private val api: RedditCloneApi,
+    private val authenticationService: AuthenticationService
 ) {
     val TAG = "PostRepo"
 
@@ -78,6 +81,27 @@ class PostRepository @Inject constructor(
             }
 
             NetworkResult.Success(postResponse.body()!!.map { it.toPost(userResponse.body()!!) })
+        } catch (e: Exception) {
+            NetworkResult.Error(e)
+        }
+    }
+
+    suspend fun createPost(groupId: Long, title: String, text: String): NetworkResult<Unit> {
+        return try {
+            val response = api.createPost(
+                groupId = groupId,
+                form = PostFormDTO(
+                    userId = authenticationService.userId.value ?: 0L,
+                    title = title,
+                    text = text
+                )
+            )
+
+            if(response.isSuccessful || response.code() == 200) {
+                NetworkResult.Success(Unit)
+            }
+
+            NetworkResult.Error(Exception("Unable to create new post."))
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }

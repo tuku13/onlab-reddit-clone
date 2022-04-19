@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
-import hu.tuku13.onlab_reddit_clone.ui.scaffold.SearchGroupTopBar
 
 @Composable
 fun SearchGroupScreen(
@@ -48,7 +47,7 @@ fun SearchGroupScreen(
                     GroupCard(
                         group = group,
                         onClick = {
-                            navigationService.navigateTo(Route.GroupRoute(
+                            navigationService.navigate(Route.GroupRoute(
                                 groupId = group.id,
                                 groupName = group.name
                             ))

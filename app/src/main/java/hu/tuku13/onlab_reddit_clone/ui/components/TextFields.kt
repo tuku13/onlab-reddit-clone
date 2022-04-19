@@ -24,7 +24,8 @@ fun TextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     width: Dp = 364.dp,
     keyboardActions: KeyboardActions = KeyboardActions(),
-    imeAction: ImeAction = ImeAction.Default
+    imeAction: ImeAction = ImeAction.Default,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     androidx.compose.material.TextField(
         value = value,
@@ -52,6 +53,7 @@ fun TextField(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary
             )
-        }
+        },
+        maxLines = maxLines,
     )
 }

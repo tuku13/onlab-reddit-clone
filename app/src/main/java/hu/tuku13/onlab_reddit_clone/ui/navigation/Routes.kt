@@ -61,7 +61,7 @@ sealed class Route(
         }
     }
 
-    class GroupRoute(groupId: Long, groupName: String) : Route(
+    class GroupRoute(val groupId: Long, val groupName: String) : Route(
         title = groupName,
         route = "group/$groupId",
         navigation = "group/{groupId}"
@@ -75,4 +75,14 @@ sealed class Route(
         title = "",
         route = "search_group"
     )
+
+    class CreatePostRoute(groupId: Long, groupName: String) : Route(
+        title = groupName,
+        route = "create_post/$groupId",
+        navigation = navigation
+    ) {
+        companion object {
+            const val navigation = "create_post/{groupId}"
+        }
+    }
 }

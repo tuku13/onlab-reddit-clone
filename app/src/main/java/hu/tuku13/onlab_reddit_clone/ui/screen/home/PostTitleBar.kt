@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
-import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.util.formatElapsedTime
 
@@ -38,7 +37,7 @@ fun PostTitleBar(
                 .clip(CircleShape)
                 .size(40.dp)
                 .clickable {
-                    navigationService.navigateTo(Route.GroupRoute(
+                    navigationService.navigate(Route.GroupRoute(
                         groupId = post.groupId,
                         groupName = post.groupName
                     ))
@@ -54,7 +53,7 @@ fun PostTitleBar(
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.clickable {
-                    navigationService.navigateTo(Route.GroupRoute(
+                    navigationService.navigate(Route.GroupRoute(
                         groupId = post.groupId,
                         groupName = post.groupName
                     ))

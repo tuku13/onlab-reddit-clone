@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import hu.tuku13.onlab_reddit_clone.Constants
+import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.repository.GroupRepository
 import hu.tuku13.onlab_reddit_clone.repository.MessageRepository
@@ -40,7 +41,10 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun providePostRepository(api: RedditCloneApi) = PostRepository(api)
+    fun providePostRepository(
+        api: RedditCloneApi,
+        authenticationService: AuthenticationService
+    ) = PostRepository(api, authenticationService)
 
     @Singleton
     @Provides

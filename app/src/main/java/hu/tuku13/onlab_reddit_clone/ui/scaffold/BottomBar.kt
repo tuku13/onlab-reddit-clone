@@ -2,10 +2,7 @@ package hu.tuku13.onlab_reddit_clone.ui.scaffold
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
-import hu.tuku13.onlab_reddit_clone.ui.navigation.BottomNavItem
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 
 @Composable
@@ -28,7 +25,7 @@ fun BottomBar(
                         style = MaterialTheme.typography.labelMedium
                     )
                 },
-                onClick = { navigationService.navigateTo(route) },
+                onClick = { navigationService.navigate(route) },
                 icon = {
                     Icon(
                         imageVector = route.icon,

@@ -1,6 +1,11 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,6 +25,7 @@ import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.scaffold.*
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.create_post.CreatePostScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.group.GroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupViewModel
@@ -59,6 +65,10 @@ fun MainScreen(
                     viewModel = searchGroupViewModel
                 )
                 is Route.HomeRoute -> HomeScreenTopBar(navigationService = navigationService)
+                is Route.CreatePostRoute -> SubScreenTopBar(
+                    title = route.value.title,
+                    navigationService = navigationService
+                )
                 else -> BaseScreenTopBar(title = route.value.title)
             }
         },
@@ -75,6 +85,30 @@ fun MainScreen(
                     ),
                     navigationService = navigationService,
                 )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = {
+            when (route.value) {
+                is Route.GroupRoute -> {
+                    LargeFloatingActionButton(
+                        onClick = {
+                            navigationService.navigate(Route.CreatePostRoute(
+                                groupId = (route.value as Route.GroupRoute).groupId,
+                                groupName = (route.value as Route.GroupRoute).groupName
+                            ))
+                        },
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.secondaryContainer)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Create Post",
+                            modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
+                        )
+                    }
+                }
+                else -> {}
             }
         },
         content = { paddingValues ->
@@ -135,6 +169,20 @@ fun MainScreen(
                 ) {
                     val groupId = it.arguments?.getLong("groupId") ?: 0L
                     GroupScreen(
+                        groupId = groupId,
+                        navigationService = navigationService
+                    )
+                }
+                composable(
+                    route = Route.CreatePostRoute.navigation,
+                    arguments = listOf(
+                        navArgument("groupId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) {
+                    val groupId = it.arguments?.getLong("groupId") ?: 0L
+                    CreatePostScreen(
                         groupId = groupId,
                         navigationService = navigationService
                     )

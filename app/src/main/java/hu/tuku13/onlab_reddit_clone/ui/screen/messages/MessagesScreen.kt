@@ -29,7 +29,7 @@ fun MessagesScreen(
             ContactCard(
                 contact = contact,
                 onClick = {
-                    navigationService.navigateTo(Route.ConversationRoute(
+                    navigationService.navigate(Route.ConversationRoute(
                         partnerUserId = it,
                         partnerUserName = contact.name,
                         partnerProfileImageUrl = profileImageUrl
