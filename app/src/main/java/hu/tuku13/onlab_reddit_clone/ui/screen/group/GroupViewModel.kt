@@ -1,5 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.group
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,8 @@ import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+val TAG = "GroupViewModel"
 
 @HiltViewModel
 class GroupViewModel @Inject constructor(
@@ -37,21 +40,33 @@ class GroupViewModel @Inject constructor(
     val isRefreshing: LiveData<Boolean>
         get() = _isRefreshing
 
-    fun setSorting(sorting: PostSorting) {
+    fun sort(sorting: PostSorting) {
         _postSorting.value = sorting
+        _posts.value?.also {
+            _posts.value = it.sorted(sorting)
+        }
     }
 
     fun refresh(groupId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = groupRepository.getGroup(groupId)) {
                 is NetworkResult.Success -> _group.postValue(result.value)
-                is NetworkResult.Error -> println(result.exception)
+                is NetworkResult.Error -> Log.d(TAG, "${result.exception}")
             }
 
             when (val result = postRepository.getPosts(groupId)) {
-                is NetworkResult.Success -> _posts.postValue(result.value ?: emptyList())
-                is NetworkResult.Error -> println("GroupViewModel refresh() error")
+                is NetworkResult.Success -> _posts.postValue(result.value.sorted(postSorting.value))
+                is NetworkResult.Error -> println(result.exception)
             }
         }
+    }
+}
+
+fun List<Post>.sorted(sorting: PostSorting?): List<Post> {
+    return when (sorting) {
+        PostSorting.TOP -> this.sortedByDescending { it.likes }
+        PostSorting.TRENDING -> this.sortedByDescending { it.likes / (System.currentTimeMillis() - it.timestamp) }
+        PostSorting.NEW -> this.sortedByDescending { it.timestamp }
+        else -> this
     }
 }

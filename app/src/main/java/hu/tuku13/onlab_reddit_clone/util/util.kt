@@ -8,7 +8,7 @@ fun formatElapsedTime(time: Long): String {
 
     return if (elapsedInMinutes <= 60) {
         "${elapsedInMinutes}m"
-    } else if (elapsedInMinutes > 60 || elapsedInMinutes <= 24 * 60) {
+    } else if (elapsedInMinutes > 60 && elapsedInMinutes <= 24 * 60) {
         "${elapsedInMinutes / 60}h"
     } else {
         "${elapsedInMinutes / (60 * 24)}d"

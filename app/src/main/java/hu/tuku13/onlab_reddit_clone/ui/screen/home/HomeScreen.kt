@@ -26,25 +26,29 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxHeight()
-            .padding(top = 16.dp, start = 24.dp, end = 24.dp)
+            .padding(start = 24.dp, end = 24.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
         val posts = viewModel.posts.observeAsState()
         val isRefreshing = viewModel.isRefreshing.observeAsState()
+        val sorting = viewModel.postSorting.observeAsState(PostSorting.NEW)
 
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value!!),
             onRefresh = { viewModel.refresh() }
         ) {
-            LazyColumn {
+            LazyColumn{
                 item {
-                    ChipGroup(
-                        newOnClick = { viewModel.setSorting(PostSorting.NEW) },
-                        topOnClick = { viewModel.setSorting(PostSorting.TOP) },
-                        trendingOnClick = { viewModel.setSorting(PostSorting.TRENDING) }
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                    ) {
+                        ChipGroup(
+                            sorting = sorting.value,
+                            newOnClick = { viewModel.sort(PostSorting.NEW) },
+                            topOnClick = { viewModel.sort(PostSorting.TOP) },
+                            trendingOnClick = { viewModel.sort(PostSorting.TRENDING) }
+                        )
+                    }
                 }
 
                 items(posts.value?.size ?: 0) { index ->

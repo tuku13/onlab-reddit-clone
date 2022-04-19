@@ -12,11 +12,14 @@ interface RedditCloneApi {
     @POST("/login")
     suspend fun login(@Body loginForm: LoginForm): Response<Long>
 
+    @GET("/posts/subscribed")
+    suspend fun getSubscribedPosts(@Query("user-id") userId: Long): Response<List<PostDTO>>
+
     @GET("/groups/{group-id}/posts")
     suspend fun getPostsByGroup(@Path("group-id") groupId: Long): Response<List<PostDTO>>
 
-    @GET("/posts/subscribed")
-    suspend fun getSubscribedPosts(@Query("user-id") userId: Long): Response<List<PostDTO>>
+    @GET("/users/{user-id}/posts")
+    suspend fun getUserPost(@Path("user-id") userId: Long): Response<List<PostDTO>>
 
     @POST("/groups/new")
     suspend fun createGroup(@Body form: CreateGroupForm): Response<Long>
@@ -34,12 +37,9 @@ interface RedditCloneApi {
     @GET("/users/{id}")
     suspend fun getUserInfo(@Path("id") userId: Long): Response<User>
 
-    @GET("/users/{user-id}/posts")
-    suspend fun getUserPost(@Path("user-id") userId: Long): Response<List<PostDTO>>
-
     @GET("/groups/search")
     suspend fun getGroups(@Query("query") name: String): Response<List<GroupDTO>>
 
-    @POST("/groups/{id}")
+    @GET("/groups/{id}")
     suspend fun getGroup(@Path("id") groupId: Long): Response<GroupDTO>
 }

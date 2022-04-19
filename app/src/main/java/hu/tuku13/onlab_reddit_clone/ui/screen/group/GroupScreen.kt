@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,40 +31,52 @@ fun GroupScreen(
     val isRefreshing = viewModel.isRefreshing.observeAsState()
 
     LaunchedEffect(viewModel) { viewModel.refresh(groupId) }
-
     LaunchedEffect(sorting.value) { viewModel.refresh(groupId) }
 
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value!!),
-        onRefresh = { viewModel.refresh(groupId) }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        LazyColumn {
-            item {
-                ChipGroup(
-                    newOnClick = { viewModel.setSorting(PostSorting.NEW) },
-                    topOnClick = { viewModel.setSorting(PostSorting.TOP) },
-                    trendingOnClick = { viewModel.setSorting(PostSorting.TRENDING) }
-                )
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value!!),
+            onRefresh = { viewModel.refresh(groupId) }
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                item {
+                    group.value?.let {
+                        GroupInfoCard(it)
+                    }
+                }
 
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, top = 8.dp)
+                    ) {
+                        ChipGroup(
+                            sorting = sorting.value,
+                            newOnClick = { viewModel.sort(PostSorting.NEW) },
+                            topOnClick = { viewModel.sort(PostSorting.TOP) },
+                            trendingOnClick = { viewModel.sort(PostSorting.TRENDING) }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
-            items(posts.value) { post ->
-                PostCard(
-                    post = post,
-                    navigationService = navigationService
-                )
+                items(posts.value) { post ->
+                    PostCard(
+                        post = post,
+                        navigationService = navigationService
+                    )
+                }
             }
         }
     }
-
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 16.dp, start = 24.dp, end = 24.dp)
-        .background(MaterialTheme.colorScheme.background),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("GroupId = $groupId")
-    }
 }
+

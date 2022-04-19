@@ -22,7 +22,7 @@ fun ProfileScreen(
     val user = viewModel.user.observeAsState()
     val posts = viewModel.posts.observeAsState(emptyList())
 
-    LaunchedEffect(key1 = Any()) {
+    LaunchedEffect(viewModel) {
         viewModel.refresh(userId)
     }
 
@@ -41,7 +41,9 @@ fun ProfileScreen(
         }
 
         item {
-            user.value?.let { InfoCard(it) }
+            user.value?.let {
+                InfoCard(it)
+            }
         }
 
         item {

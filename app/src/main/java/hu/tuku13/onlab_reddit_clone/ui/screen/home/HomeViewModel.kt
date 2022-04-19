@@ -9,6 +9,7 @@ import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.repository.PostRepository
+import hu.tuku13.onlab_reddit_clone.ui.screen.group.sorted
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,7 +27,9 @@ class HomeViewModel @Inject constructor(
     val posts: LiveData<List<Post>>
         get() = _posts
 
-    private var _postSorting: PostSorting = PostSorting.NEW
+    private val _postSorting: MutableLiveData<PostSorting> = MutableLiveData(PostSorting.NEW)
+    val postSorting: LiveData<PostSorting>
+        get() = _postSorting
 
     private var _isRefreshing: MutableLiveData<Boolean> = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean>
@@ -36,9 +39,11 @@ class HomeViewModel @Inject constructor(
         getPosts()
     }
 
-    fun setSorting(sorting: PostSorting) {
-        _postSorting = sorting
-        refresh()
+    fun sort(sorting: PostSorting) {
+        _postSorting.value = sorting
+        _posts.value?.also {
+            _posts.value = it.sorted(sorting)
+        }
     }
 
     fun refresh() {
@@ -52,11 +57,8 @@ class HomeViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     delay(1000L) // TODO kivenni végleges alkalmazásból
 
-                    when (_postSorting) {
-                        PostSorting.TOP -> _posts.postValue(result.value.sortedByDescending { it.likes })
-                        PostSorting.TRENDING -> _posts.postValue(result.value.sortedByDescending { it.likes / (System.currentTimeMillis() - it.timestamp)})
-                        PostSorting.NEW -> _posts.postValue(result.value.sortedByDescending { it.timestamp })
-                    }
+                    _posts.postValue(result.value.sorted(postSorting.value))
+
 
                     _isRefreshing.postValue(false)
                 }

@@ -1,5 +1,7 @@
 package hu.tuku13.onlab_reddit_clone.repository
 
+import android.util.Log
+import com.squareup.moshi.JsonDataException
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
@@ -58,6 +60,7 @@ class PostRepository @Inject constructor(
             postDTOs.removeAll(postDTOsToRemove)
             NetworkResult.Success(postResponse.body()!!.map { it.toPost(users[it.userId]!!) })
         } catch (e: Exception) {
+            Log.d(TAG, "$e")
             NetworkResult.Error(e)
         }
     }

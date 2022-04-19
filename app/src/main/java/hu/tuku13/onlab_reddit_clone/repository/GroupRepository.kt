@@ -39,6 +39,7 @@ class GroupRepository @Inject constructor(
         return try {
             val groupResponse = api.getGroup(groupId)
             if(!groupResponse.isSuccessful) {
+                Log.d(TAG, "${groupResponse.errorBody()}\n${groupResponse.raw()}")
                 return NetworkResult.Error(Exception("Group not found"))
             }
             val groupDTO = groupResponse.body()!!
