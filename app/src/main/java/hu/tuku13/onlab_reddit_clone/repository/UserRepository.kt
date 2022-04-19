@@ -1,7 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.repository
 
-import hu.tuku13.onlab_reddit_clone.network.model.Post
-import hu.tuku13.onlab_reddit_clone.network.model.User
+import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import javax.inject.Inject
 

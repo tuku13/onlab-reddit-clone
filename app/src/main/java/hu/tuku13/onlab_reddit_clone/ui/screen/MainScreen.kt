@@ -84,7 +84,7 @@ fun MainScreen(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Route.HomeRoute.navigation) {
-                    HomeScreen()
+                    HomeScreen(navigationService = navigationService)
                 }
                 composable(Route.CreateGroupRoute.navigation) {
                     CreateGroupScreen()
@@ -93,7 +93,10 @@ fun MainScreen(
                     MessagesScreen(navigationService)
                 }
                 composable(Route.ProfileRoute.navigation) {
-                    ProfileScreen(userId = authenticationService.userId.value ?: 0L)
+                    ProfileScreen(
+                        userId = authenticationService.userId.value ?: 0L,
+                        navigationService = navigationService
+                    )
                 }
                 composable(
                     route = Route.ConversationRoute.navigation,
@@ -131,7 +134,10 @@ fun MainScreen(
                     )
                 ) {
                     val groupId = it.arguments?.getLong("groupId") ?: 0L
-                    GroupScreen(groupId)
+                    GroupScreen(
+                        groupId = groupId,
+                        navigationService = navigationService
+                    )
                 }
             }
         }

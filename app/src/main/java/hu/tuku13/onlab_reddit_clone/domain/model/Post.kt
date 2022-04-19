@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.network.model
+package hu.tuku13.onlab_reddit_clone.domain.model
 
 data class Post(
     val postId: Long,
@@ -8,12 +8,10 @@ data class Post(
     val userCommented: Boolean = false,
     val groupImage: String,
     val groupName: String,
-    val postedBy: String,
     val title: String,
     val text: String,
     val postImage: String,
     val timestamp: Long,
     val groupId: Long,
-    val userId: Long
+    val user: User
 )
-

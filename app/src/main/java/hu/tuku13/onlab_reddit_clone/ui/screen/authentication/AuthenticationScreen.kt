@@ -29,14 +29,14 @@ fun AuthenticationScreen() {
                     )
                 },
                 elevation = 0.dp,
-                actions = {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
-                },
+//                actions = {
+//                    Icon(
+//                        imageVector = Icons.Default.MoreVert,
+//                        contentDescription = null,
+//                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+//                        modifier = Modifier.padding(end = 16.dp)
+//                    )
+//                },
                 backgroundColor = Extended.surface2
             )
         },
@@ -52,13 +52,6 @@ fun AuthenticationScreen() {
                 )
             }
         }
-
-
     )
-
 }
 
-enum class AuthenticationState(val title: String) {
-    LOGIN("Login"),
-    REGISTER("Register")
-}

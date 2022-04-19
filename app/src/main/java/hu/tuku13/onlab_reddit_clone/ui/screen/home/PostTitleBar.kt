@@ -1,5 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -13,10 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
-import hu.tuku13.onlab_reddit_clone.network.model.Post
+import hu.tuku13.onlab_reddit_clone.domain.model.Post
+import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
+import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
+import hu.tuku13.onlab_reddit_clone.util.formatElapsedTime
 
 @Composable
-fun PostTitleBar(post: Post) {
+fun PostTitleBar(
+    post: Post,
+    navigationService: NavigationService
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -29,6 +37,12 @@ fun PostTitleBar(post: Post) {
                 .padding(16.dp)
                 .clip(CircleShape)
                 .size(40.dp)
+                .clickable {
+                    navigationService.navigateTo(Route.GroupRoute(
+                        groupId = post.groupId,
+                        groupName = post.groupName
+                    ))
+                }
         )
 
         Column(
@@ -39,13 +53,19 @@ fun PostTitleBar(post: Post) {
                 text = post.groupName,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.clickable {
+                    navigationService.navigateTo(Route.GroupRoute(
+                        groupId = post.groupId,
+                        groupName = post.groupName
+                    ))
+                }
             )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = post.postedBy,
+                    text = post.user.name,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )

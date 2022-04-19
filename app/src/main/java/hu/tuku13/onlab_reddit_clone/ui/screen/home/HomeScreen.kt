@@ -13,11 +13,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
+import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.components.ChipGroup
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navigationService: NavigationService,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Column(
@@ -46,7 +48,10 @@ fun HomeScreen(
                 }
 
                 items(posts.value?.size ?: 0) { index ->
-                    PostCard(post = posts.value!![index])
+                    PostCard(
+                        post = posts.value!![index],
+                        navigationService = navigationService
+                    )
                 }
             }
         }

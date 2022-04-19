@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
-import hu.tuku13.onlab_reddit_clone.network.model.Post
-import hu.tuku13.onlab_reddit_clone.network.model.User
+import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
+import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.repository.PostRepository
 import hu.tuku13.onlab_reddit_clone.repository.UserRepository
+import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,8 +43,12 @@ class ProfileViewModel @Inject constructor(
 
     private fun getPosts(userId: Long) {
         viewModelScope.launch {
-            val posts = postRepository.getUserPosts(userId)
-            _posts.postValue(posts.sortedByDescending { it.timestamp })
+            when (val result = postRepository.getUserPosts(userId)) {
+                is NetworkResult.Success -> _posts.postValue(
+                    result.value.sortedByDescending { it.timestamp }
+                )
+                is NetworkResult.Error -> println(result.exception)
+            }
         }
     }
 }
