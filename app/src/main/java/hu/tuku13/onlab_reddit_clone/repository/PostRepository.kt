@@ -98,7 +98,7 @@ class PostRepository @Inject constructor(
             )
 
             if(response.isSuccessful || response.code() == 200) {
-                NetworkResult.Success(Unit)
+                return NetworkResult.Success(Unit)
             }
 
             NetworkResult.Error(Exception("Unable to create new post."))

@@ -112,7 +112,6 @@ fun LoginScreen(
                     viewModel.login(username, password)
                 }
             )
-
         }
     }
 

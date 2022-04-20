@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -37,11 +38,24 @@ fun CreatePostScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     var title by remember { mutableStateOf("") }
     var text by remember { mutableStateOf("") }
 
-    // TODO létrehozott poszt után navigáció
+    DisposableEffect(lifecycleOwner) {
+        val observer: Observer<Boolean> = Observer {
+            if(it == true) {
+                navigationService.popBackStack()
+            }
+        }
+
+        viewModel.postCreated.observe(lifecycleOwner, observer)
+
+        onDispose {
+            viewModel.postCreated.removeObserver(observer)
+        }
+    }
 
     Column(
         modifier = Modifier
