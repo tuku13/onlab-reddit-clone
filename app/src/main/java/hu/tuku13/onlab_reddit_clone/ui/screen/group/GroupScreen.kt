@@ -69,6 +69,7 @@ fun GroupScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
+
                 items(posts.value) { post ->
                     PostCard(
                         post = post,

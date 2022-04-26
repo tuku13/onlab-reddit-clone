@@ -1,6 +1,7 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.home
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -9,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +59,15 @@ fun PostCard(
                 style = MaterialTheme.typography.labelLarge
             )
 
-            PostActionBar(post = post)
+            PostActionBar(
+                post = post,
+                readMoreOnClick = {
+                    navigationService.navigate(Route.PostRoute(
+                        postId = post.postId,
+                        groupName = post.groupName
+                    ))
+                }
+            )
         }
     }
 }

@@ -27,6 +27,7 @@ import hu.tuku13.onlab_reddit_clone.ui.scaffold.*
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.create_post.CreatePostScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.group.GroupScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.post.PostScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupViewModel
 
@@ -69,6 +70,10 @@ fun MainScreen(
                     title = route.value.title,
                     navigationService = navigationService
                 )
+                is Route.PostRoute -> SubScreenTopBar(
+                    title = route.value.title,
+                    navigationService = navigationService
+                )
                 else -> BaseScreenTopBar(title = route.value.title)
             }
         },
@@ -76,6 +81,7 @@ fun MainScreen(
             when (route.value) {
                 is Route.ConversationRoute -> {}
                 is Route.SearchGroupRoute -> {}
+                is Route.PostRoute -> {}
                 else -> BottomBar(
                     routes = listOf(
                         Route.HomeRoute,
@@ -93,10 +99,12 @@ fun MainScreen(
                 is Route.GroupRoute -> {
                     LargeFloatingActionButton(
                         onClick = {
-                            navigationService.navigate(Route.CreatePostRoute(
-                                groupId = (route.value as Route.GroupRoute).groupId,
-                                groupName = (route.value as Route.GroupRoute).groupName
-                            ))
+                            navigationService.navigate(
+                                Route.CreatePostRoute(
+                                    groupId = (route.value as Route.GroupRoute).groupId,
+                                    groupName = (route.value as Route.GroupRoute).groupName
+                                )
+                            )
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.secondaryContainer)
@@ -184,6 +192,21 @@ fun MainScreen(
                     val groupId = it.arguments?.getLong("groupId") ?: 0L
                     CreatePostScreen(
                         groupId = groupId,
+                        navigationService = navigationService
+                    )
+                }
+                composable(
+                    route = Route.PostRoute.navigation,
+                    arguments = listOf(
+                        navArgument("postId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) {
+                    val postId = it.arguments?.getLong("postId") ?: 0L
+                    // TODO PostScreen topappbar visszanyíl
+                    PostScreen(
+                        postId = postId,
                         navigationService = navigationService
                     )
                 }

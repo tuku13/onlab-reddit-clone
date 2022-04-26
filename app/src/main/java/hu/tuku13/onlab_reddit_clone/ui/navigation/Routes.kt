@@ -85,4 +85,14 @@ sealed class Route(
             const val navigation = "create_post/{groupId}"
         }
     }
+
+    class PostRoute(val postId: Long, groupName: String) : Route(
+        title = groupName,
+        route = "post/$postId",
+        navigation = CreatePostRoute.navigation
+    ) {
+        companion object {
+            const val navigation = "post/{postId}"
+        }
+    }
 }

@@ -107,6 +107,7 @@ fun CreatePostScreen(
                 )
             )
         }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(

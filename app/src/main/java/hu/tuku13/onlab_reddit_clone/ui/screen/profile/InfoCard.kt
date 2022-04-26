@@ -1,7 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.profile
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -9,13 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 import hu.tuku13.onlab_reddit_clone.ui.components.OutlinedButton
+import hu.tuku13.onlab_reddit_clone.ui.components.ProfileImage
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,12 +37,7 @@ fun InfoCard(
                     .fillMaxWidth()
             ) {
 
-                GlideImage(
-                    imageModel = if (user.profileImage == "") "https://picsum.photos/40" else user.profileImage,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(40.dp)
-                )
+                ProfileImage(user)
 
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -82,3 +75,4 @@ fun InfoCard(
         }
     }
 }
+

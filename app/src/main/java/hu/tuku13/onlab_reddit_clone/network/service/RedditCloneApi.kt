@@ -40,9 +40,18 @@ interface RedditCloneApi {
     @GET("/groups/search")
     suspend fun getGroups(@Query("query") name: String): Response<List<GroupDTO>>
 
+    @GET("/posts/{post-id}")
+    suspend fun getPost(@Path("post-id")postId: Long): Response<PostDTO>
+
     @GET("/groups/{id}")
     suspend fun getGroup(@Path("id") groupId: Long): Response<GroupDTO>
 
     @POST("/groups/{group-id}/posts/new")
     suspend fun createPost(@Path("group-id") groupId: Long, @Body form: PostFormDTO): Response<Long>
+
+    @GET("/posts/{post-id}/comments")
+    suspend fun getAllComments(@Path("post-id") postId: Long): Response<List<CommentDTO>>
+
+    @GET("/comments/{parent-comment-id}/children")
+    suspend fun getChildrenComments(@Path("parent-comment-id") parentCommentId: Long): Response<List<CommentDTO>>
 }

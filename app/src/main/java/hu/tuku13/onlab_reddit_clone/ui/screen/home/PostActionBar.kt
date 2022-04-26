@@ -13,7 +13,10 @@ import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 
 @Composable
-fun PostActionBar(post: Post) {
+fun PostActionBar(
+    post: Post,
+    readMoreOnClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .height(70.dp)
@@ -42,9 +45,7 @@ fun PostActionBar(post: Post) {
 
         FilledButton(
             text = "Read More",
-            onClick = {
-                // TODO atvinni a post details screen-re
-            }
+            onClick = { readMoreOnClick() }
         )
     }
 }
