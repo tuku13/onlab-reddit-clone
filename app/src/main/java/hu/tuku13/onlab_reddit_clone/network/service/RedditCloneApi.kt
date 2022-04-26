@@ -54,4 +54,7 @@ interface RedditCloneApi {
 
     @GET("/comments/{parent-comment-id}/children")
     suspend fun getChildrenComments(@Path("parent-comment-id") parentCommentId: Long): Response<List<CommentDTO>>
+
+    @POST("/posts/{post-id}/comments/new")
+    suspend fun createComment(@Path("post-id") postId: Long, @Body form: CommentFormDTO): Response<Long>
 }

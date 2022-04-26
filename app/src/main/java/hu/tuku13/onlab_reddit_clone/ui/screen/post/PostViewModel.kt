@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository
-): ViewModel() {
+) : ViewModel() {
     private val TAG = "PostVM"
     var postId: Long = 0L
 
@@ -33,7 +33,7 @@ class PostViewModel @Inject constructor(
 
     fun getPost() {
         viewModelScope.launch(Dispatchers.IO) {
-            when(val response = postRepository.getPost(postId)) {
+            when (val response = postRepository.getPost(postId)) {
                 is NetworkResult.Success -> _post.postValue(response.value)
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
             }
@@ -41,8 +41,8 @@ class PostViewModel @Inject constructor(
     }
 
     fun selectParent(comment: Comment?) {
-        Log.d(TAG, "selectparent: ${comment?.id}")
-        if(comment?.parentCommentId == null) {
+        Log.d(TAG, "selectParent: ${comment?.id}")
+        if (comment?.parentCommentId == null) {
             selectedComment.value = null
             getComments()
             return
@@ -50,7 +50,7 @@ class PostViewModel @Inject constructor(
 
         selectedComment.value = comment
         viewModelScope.launch(Dispatchers.IO) {
-            when(val response = postRepository.getChildrenComments(comment.parentCommentId)) {
+            when (val response = postRepository.getChildrenComments(comment.parentCommentId)) {
                 is NetworkResult.Success -> _comments.postValue(response.value!!)
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
             }
@@ -58,13 +58,13 @@ class PostViewModel @Inject constructor(
     }
 
     fun selectComment(comment: Comment?) {
-        if(comment == null) {
-            selectedComment.value = null
+        if (comment == null) {
+            selectedComment.postValue(null)
             getComments()
         } else {
-            selectedComment.value = comment
+            selectedComment.postValue(comment)
             viewModelScope.launch(Dispatchers.IO) {
-                when(val response = postRepository.getChildrenComments(comment.id)) {
+                when (val response = postRepository.getChildrenComments(comment.id)) {
                     is NetworkResult.Success -> {
                         val comments = mutableListOf<Comment>().also {
                             it.add(comment)
@@ -80,10 +80,26 @@ class PostViewModel @Inject constructor(
 
     fun getComments() {
         viewModelScope.launch(Dispatchers.IO) {
-            when(val response = postRepository.getCommentsAtPost(postId)) {
+            when (val response = postRepository.getCommentsAtPost(postId)) {
                 is NetworkResult.Success -> {
                     val postComments = response.value!!.filter { it.parentCommentId == null }
                     _comments.postValue(postComments)
+                }
+                is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+            }
+        }
+    }
+
+    fun createComment(text: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = postRepository.createComment(
+                text = text,
+                postId = postId,
+                parentCommentId = selectedComment.value?.id
+            )) {
+                is NetworkResult.Success -> {
+                    selectComment(selectedComment.value)
+                    getPost()
                 }
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
             }

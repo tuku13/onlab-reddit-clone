@@ -1,7 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.home
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -61,7 +60,7 @@ fun PostCard(
 
             PostActionBar(
                 post = post,
-                readMoreOnClick = {
+                navigateToPost = {
                     navigationService.navigate(Route.PostRoute(
                         postId = post.postId,
                         groupName = post.groupName

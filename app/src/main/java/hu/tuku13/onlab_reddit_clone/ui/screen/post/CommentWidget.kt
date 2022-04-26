@@ -23,10 +23,12 @@ fun CommentWidget(
     onClick: (Comment) -> Unit
 ) {
     val background = if (comment == selectedComment) Extended.surface2 else Color.Transparent
+    val startPadding = if(selectedComment != null && comment != selectedComment) 16.dp else 0.dp
     Card(
         containerColor = background,
         modifier = Modifier
             .padding(vertical = 16.dp)
+            .padding(start = startPadding)
             .clickable { onClick(comment) },
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {

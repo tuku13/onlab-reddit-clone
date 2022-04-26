@@ -9,13 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
-import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 
 @Composable
 fun PostActionBar(
     post: Post,
-    readMoreOnClick: () -> Unit
+    navigateToPost: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -38,14 +37,12 @@ fun PostActionBar(
         Comment(
             comments = post.comments,
             userAlreadyCommented = post.userCommented,
-            onClick = {
-                // TODO comment gombra kattintas lekezelese
-            }
+            onClick = { navigateToPost() }
         )
 
         FilledButton(
             text = "Read More",
-            onClick = { readMoreOnClick() }
+            onClick = { navigateToPost() }
         )
     }
 }

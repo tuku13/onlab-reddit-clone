@@ -7,6 +7,7 @@ import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.CommentDTO
+import hu.tuku13.onlab_reddit_clone.network.model.CommentFormDTO
 import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
 import hu.tuku13.onlab_reddit_clone.network.model.PostFormDTO
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
@@ -99,7 +100,7 @@ class PostRepository @Inject constructor(
         return try {
             val commentResponse = api.getAllComments(postId)
 
-            if(!commentResponse.isSuccessful) {
+            if (!commentResponse.isSuccessful) {
                 NetworkResult.Error(Exception("Post not found."))
             }
 
@@ -117,7 +118,7 @@ class PostRepository @Inject constructor(
         return try {
             val commentResponse = api.getChildrenComments(parentCommentId)
 
-            if(!commentResponse.isSuccessful) {
+            if (!commentResponse.isSuccessful) {
                 NetworkResult.Error(Exception("Post not found."))
             }
 
@@ -131,14 +132,14 @@ class PostRepository @Inject constructor(
         }
     }
 
-    private suspend fun convertCommentDTOsToComments(commentDTOs: List<CommentDTO>) : List<Comment> {
+    private suspend fun convertCommentDTOsToComments(commentDTOs: List<CommentDTO>): List<Comment> {
         val userIds = commentDTOs.map { it.postedBy }.toSet()
         val users = mutableListOf<User>()
 
         userIds.forEach { userId ->
             val userResponse = api.getUserInfo(userId)
 
-            if(userResponse.isSuccessful) {
+            if (userResponse.isSuccessful) {
                 users.add(userResponse.body()!!)
             }
         }
@@ -173,6 +174,33 @@ class PostRepository @Inject constructor(
         }
     }
 
+    suspend fun createComment(
+        text: String,
+        postId: Long,
+        parentCommentId: Long?
+    ): NetworkResult<Long> {
+        if (authenticationService.userId.value == null) {
+            return NetworkResult.Error(Exception("User is not authenticated."))
+        }
+
+        val form = CommentFormDTO(
+            userId = authenticationService.userId.value ?: 0L,
+            text = text,
+            parentCommentId = parentCommentId
+        )
+        return try {
+            val response = api.createComment(postId, form)
+
+            if (!response.isSuccessful) {
+                NetworkResult.Error(Exception("Unknown error."))
+            }
+
+            NetworkResult.Success(response.body()!!)
+        } catch (e: Exception) {
+            NetworkResult.Error(e)
+        }
+    }
+
     suspend fun createPost(groupId: Long, title: String, text: String): NetworkResult<Unit> {
         return try {
             val response = api.createPost(
@@ -184,7 +212,7 @@ class PostRepository @Inject constructor(
                 )
             )
 
-            if(response.isSuccessful || response.code() == 200) {
+            if (response.isSuccessful || response.code() == 200) {
                 return NetworkResult.Success(Unit)
             }
 

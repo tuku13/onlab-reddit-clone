@@ -14,15 +14,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.skydoves.landscapist.glide.GlideImage
-import hu.tuku13.onlab_reddit_clone.domain.model.Comment
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.MessageInputBar
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.Comment
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.LikeBar
@@ -38,7 +36,7 @@ fun PostScreen(
 ) {
     val post = viewModel.post.observeAsState()
     val comments = viewModel.comments.observeAsState(emptyList())
-    var selectedComment = viewModel.selectedComment.observeAsState()
+    val selectedComment = viewModel.selectedComment.observeAsState()
 
     LaunchedEffect(viewModel) {
         viewModel.postId = postId
@@ -56,7 +54,8 @@ fun PostScreen(
         LazyColumn(
             modifier = Modifier
                 .width(360.dp)
-                .wrapContentHeight()
+                .fillMaxHeight()
+                .weight(1.0f)
         ) {
             item {
                 Card(
@@ -121,7 +120,16 @@ fun PostScreen(
                             Comment(
                                 comments = it.comments,
                                 userAlreadyCommented = it.userCommented,
-                                onClick = { }
+                                onClick = {
+                                    post.value?.let { post ->
+                                        navigationService.navigate(
+                                            Route.PostRoute(
+                                                postId = post.postId,
+                                                groupName = post.groupName
+                                            )
+                                        )
+                                    }
+                                }
                             )
 
                         }
@@ -134,7 +142,7 @@ fun PostScreen(
                     comment = comment,
                     selectedComment = selectedComment.value,
                     onClick = {
-                        if(selectedComment.value == it) {
+                        if (selectedComment.value == it) {
                             viewModel.selectParent(it)
                         } else {
                             viewModel.selectComment(it)
@@ -144,7 +152,10 @@ fun PostScreen(
             }
         }
 
-        Column {
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+        ) {
             selectedComment.value?.let {
                 Row(
                     modifier = Modifier
@@ -162,8 +173,8 @@ fun PostScreen(
                 }
             }
             MessageInputBar(
-                onSubmit = {
-                    // TODO write a comment
+                onSubmit = { text ->
+                    viewModel.createComment(text)
                 }
             )
         }
