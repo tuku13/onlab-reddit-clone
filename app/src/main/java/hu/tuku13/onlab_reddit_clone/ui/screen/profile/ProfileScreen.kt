@@ -53,7 +53,10 @@ fun ProfileScreen(
         items(posts.value) { post ->
             PostCard(
                 post = post,
-                navigationService = navigationService
+                navigationService = navigationService,
+                onLike = {
+                    // TODO itt is like gomb
+                }
             )
         }
     }

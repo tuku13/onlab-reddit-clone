@@ -6,10 +6,7 @@ import hu.tuku13.onlab_reddit_clone.domain.model.Comment
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
-import hu.tuku13.onlab_reddit_clone.network.model.CommentDTO
-import hu.tuku13.onlab_reddit_clone.network.model.CommentFormDTO
-import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
-import hu.tuku13.onlab_reddit_clone.network.model.PostFormDTO
+import hu.tuku13.onlab_reddit_clone.network.model.*
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import javax.inject.Inject
@@ -217,6 +214,29 @@ class PostRepository @Inject constructor(
             }
 
             NetworkResult.Error(Exception("Unable to create new post."))
+        } catch (e: Exception) {
+            NetworkResult.Error(e)
+        }
+    }
+
+    suspend fun likePost(postId: Long, value: Int): NetworkResult<Long> {
+        val userId = authenticationService.userId.value
+            ?: return NetworkResult.Error(Exception("User is not authenticated."))
+
+        return try {
+            val response = api.likePost(
+                postId = postId,
+                form = LikeFormDTO(
+                    userId = userId,
+                    value = value
+                )
+            )
+
+            if (!response.isSuccessful) {
+                return NetworkResult.Error(Exception("Unknown error."))
+            }
+
+            NetworkResult.Success(response.body()!!)
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }

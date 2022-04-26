@@ -60,6 +60,22 @@ class GroupViewModel @Inject constructor(
             }
         }
     }
+
+    fun likePost(post: Post, value: Int, groupId: Long) {
+        val likeValue = when (post.userOpinion) {
+            value -> 0
+            else -> value
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = postRepository.likePost(post.postId, likeValue)) {
+                is NetworkResult.Success -> {
+                    refresh(groupId)
+                }
+                is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+            }
+        }
+    }
+
 }
 
 fun List<Post>.sorted(sorting: PostSorting?): List<Post> {

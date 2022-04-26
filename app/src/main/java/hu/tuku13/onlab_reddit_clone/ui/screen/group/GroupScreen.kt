@@ -73,7 +73,14 @@ fun GroupScreen(
                 items(posts.value) { post ->
                     PostCard(
                         post = post,
-                        navigationService = navigationService
+                        navigationService = navigationService,
+                        onLike = {
+                            viewModel.likePost(
+                                post = post,
+                                value = it,
+                                groupId = groupId
+                            )
+                        }
                     )
                 }
             }

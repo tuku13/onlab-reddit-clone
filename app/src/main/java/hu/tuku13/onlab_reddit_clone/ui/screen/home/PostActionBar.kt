@@ -14,7 +14,8 @@ import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 @Composable
 fun PostActionBar(
     post: Post,
-    navigateToPost: () -> Unit
+    navigateToPost: () -> Unit,
+    onLike: (Int) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -27,10 +28,10 @@ fun PostActionBar(
             likes = post.likes,
             userOpinion = post.userOpinion,
             like = {
-                // TODO ViewModel like fgv
+                onLike(1)
             },
             dislike = {
-                //TODO ViewModel dislike fgv
+                onLike(-1)
             }
         )
 

@@ -57,4 +57,7 @@ interface RedditCloneApi {
 
     @POST("/posts/{post-id}/comments/new")
     suspend fun createComment(@Path("post-id") postId: Long, @Body form: CommentFormDTO): Response<Long>
+
+    @POST("/posts/{post-id}/like")
+    suspend fun likePost(@Path("post-id") postId: Long, @Body form: LikeFormDTO): Response<Long>
 }

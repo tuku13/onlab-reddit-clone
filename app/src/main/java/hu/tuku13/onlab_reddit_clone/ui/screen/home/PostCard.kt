@@ -15,6 +15,7 @@ import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 @Composable
 fun PostCard(
     post: Post,
+    onLike: (Int) -> Unit,
     navigationService: NavigationService
 ) {
     Card(
@@ -65,7 +66,8 @@ fun PostCard(
                         postId = post.postId,
                         groupName = post.groupName
                     ))
-                }
+                },
+                onLike = onLike
             )
         }
     }

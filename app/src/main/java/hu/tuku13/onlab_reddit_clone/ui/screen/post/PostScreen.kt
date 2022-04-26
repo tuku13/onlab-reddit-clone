@@ -110,10 +110,10 @@ fun PostScreen(
                                 likes = it.likes,
                                 userOpinion = it.userOpinion,
                                 like = {
-                                    // TODO ViewModel like fgv
+                                    viewModel.likePost(1)
                                 },
                                 dislike = {
-                                    //TODO ViewModel dislike fgv
+                                    viewModel.likePost(-1)
                                 }
                             )
 

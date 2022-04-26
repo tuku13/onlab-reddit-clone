@@ -82,7 +82,7 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = postRepository.getCommentsAtPost(postId)) {
                 is NetworkResult.Success -> {
-                    val postComments = response.value!!.filter { it.parentCommentId == null }
+                    val postComments = response.value.filter { it.parentCommentId == null }
                     _comments.postValue(postComments)
                 }
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
@@ -99,6 +99,21 @@ class PostViewModel @Inject constructor(
             )) {
                 is NetworkResult.Success -> {
                     selectComment(selectedComment.value)
+                    getPost()
+                }
+                is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+            }
+        }
+    }
+
+    fun likePost(value: Int) {
+        val likeValue = when (post.value?.userOpinion ?: 0) {
+            value -> 0
+            else -> value
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = postRepository.likePost(postId, likeValue)) {
+                is NetworkResult.Success -> {
                     getPost()
                 }
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())

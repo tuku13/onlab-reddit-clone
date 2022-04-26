@@ -54,7 +54,10 @@ fun HomeScreen(
                 items(posts.value?.size ?: 0) { index ->
                     PostCard(
                         post = posts.value!![index],
-                        navigationService = navigationService
+                        navigationService = navigationService,
+                        onLike = {
+                            // TODO itt is like gomb
+                        }
                     )
                 }
             }
