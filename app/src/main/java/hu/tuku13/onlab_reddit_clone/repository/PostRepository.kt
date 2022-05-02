@@ -190,9 +190,10 @@ class PostRepository @Inject constructor(
 
             if (!response.isSuccessful) {
                 NetworkResult.Error(Exception("Unknown error."))
+            } else {
+                NetworkResult.Success(response.body()!!)
             }
 
-            NetworkResult.Success(response.body()!!)
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }

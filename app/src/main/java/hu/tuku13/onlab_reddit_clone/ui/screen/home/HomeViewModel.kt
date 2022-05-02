@@ -10,6 +10,7 @@ import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
+import hu.tuku13.onlab_reddit_clone.repository.GroupRepository
 import hu.tuku13.onlab_reddit_clone.repository.PostRepository
 import hu.tuku13.onlab_reddit_clone.ui.screen.group.sorted
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
@@ -23,6 +24,7 @@ const val TAG = "Home VM"
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val groupRepository: GroupRepository,
     private val authenticationService: AuthenticationService
 ) : ViewModel() {
     private var _posts: MutableLiveData<List<Post>> = MutableLiveData(emptyList())
@@ -61,7 +63,6 @@ class HomeViewModel @Inject constructor(
 
                     _posts.postValue(result.value.sorted(postSorting.value))
 
-
                     _isRefreshing.postValue(false)
                 }
                 is NetworkResult.Error -> {
@@ -74,6 +75,15 @@ class HomeViewModel @Inject constructor(
     fun likePost(post: Post, likeValue: LikeValue) {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = postRepository.likePost(post.postId, likeValue)) {
+                is NetworkResult.Success -> getPosts()
+                is NetworkResult.Error -> Log.d(TAG, result.exception.toString())
+            }
+        }
+    }
+
+    fun subscribeToGroup(groupId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when(val result = groupRepository.subscribe(groupId)) {
                 is NetworkResult.Success -> getPosts()
                 is NetworkResult.Error -> Log.d(TAG, result.exception.toString())
             }

@@ -6,5 +6,6 @@ data class Group(
     val groupImageUrl: String = "",
     val id: Long = 0,
     val name: String = "",
-    val members: Int = 0
+    val members: Int = 0,
+    val userSubscribed: Boolean
 )

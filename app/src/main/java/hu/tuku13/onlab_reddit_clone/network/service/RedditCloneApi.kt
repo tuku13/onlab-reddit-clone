@@ -64,4 +64,13 @@ interface RedditCloneApi {
 
     @GET("/users/{user-od}/likes")
     suspend fun getUserLikes(@Path("user-id") userId: Long): Response<List<LikeDTO>>
+
+    @GET("/groups/{group-id}/subscription")
+    suspend fun isUserAlreadySubscribed(@Path("group-id") groupId: Long, @Body form: UserFromDTO): Response<Boolean>
+
+    @POST("/groups/{group-id}/subscribe")
+    suspend fun subscribe(@Path("group-id") groupId: Long, @Body form: UserFromDTO): Response<Unit>
+
+    @POST("/groups/{group-id}/unsubscribe")
+    suspend fun unsubscribe(@Path("group-id") groupId: Long, @Body form: UserFromDTO): Response<Unit>
 }
