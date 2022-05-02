@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.model.Comment
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.repository.PostRepository
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
@@ -106,11 +107,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun likePost(value: Int) {
-        val likeValue = when (post.value?.userOpinion ?: 0) {
-            value -> 0
-            else -> value
-        }
+    fun likePost(likeValue: LikeValue) {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = postRepository.likePost(postId, likeValue)) {
                 is NetworkResult.Success -> {

@@ -1,5 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.network.service
 
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.network.model.*
 import retrofit2.Response
@@ -59,5 +60,8 @@ interface RedditCloneApi {
     suspend fun createComment(@Path("post-id") postId: Long, @Body form: CommentFormDTO): Response<Long>
 
     @POST("/posts/{post-id}/like")
-    suspend fun likePost(@Path("post-id") postId: Long, @Body form: LikeFormDTO): Response<Long>
+    suspend fun likePost(@Path("post-id") postId: Long, @Body form: LikeFormDTO): Response<Unit>
+
+    @GET("/users/{user-od}/likes")
+    suspend fun getUserLikes(@Path("user-id") userId: Long): Response<List<LikeDTO>>
 }

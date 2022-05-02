@@ -1,8 +1,8 @@
 package hu.tuku13.onlab_reddit_clone.repository
 
 import android.util.Log
-import com.squareup.moshi.JsonDataException
 import hu.tuku13.onlab_reddit_clone.domain.model.Comment
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
@@ -219,24 +219,27 @@ class PostRepository @Inject constructor(
         }
     }
 
-    suspend fun likePost(postId: Long, value: Int): NetworkResult<Long> {
+    suspend fun likePost(postId: Long, likeValue: LikeValue): NetworkResult<Unit> {
         val userId = authenticationService.userId.value
             ?: return NetworkResult.Error(Exception("User is not authenticated."))
 
         return try {
             val response = api.likePost(
-                postId = postId,
-                form = LikeFormDTO(
+                postId,
+                LikeFormDTO(
                     userId = userId,
-                    value = value
+                    value = likeValue.value
                 )
             )
 
-            if (!response.isSuccessful) {
-                return NetworkResult.Error(Exception("Unknown error."))
-            }
+            Log.d("likePost", "status: ${response.code()}")
+            Log.d("likePost", "raw: ${response.raw()}")
 
-            NetworkResult.Success(response.body()!!)
+            if (response.isSuccessful) {
+               return NetworkResult.Success(Unit)
+            } else {
+                NetworkResult.Error(Exception(response.message()))
+            }
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }

@@ -1,10 +1,12 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
@@ -53,7 +55,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            when(val result = postRepository.getSubscribedPosts(authenticationService.userId.value ?: 0L)) {
+            when (val result = postRepository.getSubscribedPosts(authenticationService.userId.value ?: 0L)) {
                 is NetworkResult.Success -> {
                     delay(1000L) // TODO kivenni végleges alkalmazásból
 
@@ -65,6 +67,15 @@ class HomeViewModel @Inject constructor(
                 is NetworkResult.Error -> {
                     println(result.exception)
                 }
+            }
+        }
+    }
+
+    fun likePost(post: Post, likeValue: LikeValue) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = postRepository.likePost(post.postId, likeValue)) {
+                is NetworkResult.Success -> getPosts()
+                is NetworkResult.Error -> Log.d(TAG, result.exception.toString())
             }
         }
     }

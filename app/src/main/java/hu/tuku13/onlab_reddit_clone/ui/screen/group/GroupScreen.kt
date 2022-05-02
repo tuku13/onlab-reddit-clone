@@ -77,7 +77,7 @@ fun GroupScreen(
                         onLike = {
                             viewModel.likePost(
                                 post = post,
-                                value = it,
+                                likeValue = it,
                                 groupId = groupId
                             )
                         }

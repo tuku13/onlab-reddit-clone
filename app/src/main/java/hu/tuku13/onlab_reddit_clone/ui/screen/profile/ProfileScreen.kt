@@ -23,7 +23,8 @@ fun ProfileScreen(
     val posts = viewModel.posts.observeAsState(emptyList())
 
     LaunchedEffect(viewModel) {
-        viewModel.refresh(userId)
+        viewModel.userId = userId
+        viewModel.refresh()
     }
 
     LazyColumn(
@@ -54,8 +55,8 @@ fun ProfileScreen(
             PostCard(
                 post = post,
                 navigationService = navigationService,
-                onLike = {
-                    // TODO itt is like gomb
+                onLike = { likeValue ->
+                    viewModel.likePost(post, likeValue)
                 }
             )
         }

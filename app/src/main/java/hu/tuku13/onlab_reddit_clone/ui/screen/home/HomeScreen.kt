@@ -55,8 +55,8 @@ fun HomeScreen(
                     PostCard(
                         post = posts.value!![index],
                         navigationService = navigationService,
-                        onLike = {
-                            // TODO itt is like gomb
+                        onLike = { likeValue ->
+                            viewModel.likePost(posts.value!![index], likeValue)
                         }
                     )
                 }

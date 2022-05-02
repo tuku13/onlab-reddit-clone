@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
 import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
@@ -61,16 +62,10 @@ class GroupViewModel @Inject constructor(
         }
     }
 
-    fun likePost(post: Post, value: Int, groupId: Long) {
-        val likeValue = when (post.userOpinion) {
-            value -> 0
-            else -> value
-        }
+    fun likePost(post: Post, likeValue: LikeValue, groupId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = postRepository.likePost(post.postId, likeValue)) {
-                is NetworkResult.Success -> {
-                    refresh(groupId)
-                }
+                is NetworkResult.Success -> refresh(groupId)
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
             }
         }

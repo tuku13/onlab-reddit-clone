@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
@@ -15,7 +16,7 @@ import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 @Composable
 fun PostCard(
     post: Post,
-    onLike: (Int) -> Unit,
+    onLike: (LikeValue) -> Unit,
     navigationService: NavigationService
 ) {
     Card(

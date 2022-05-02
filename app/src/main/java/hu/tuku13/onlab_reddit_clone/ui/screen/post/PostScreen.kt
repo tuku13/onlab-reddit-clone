@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.MessageInputBar
@@ -110,10 +111,18 @@ fun PostScreen(
                                 likes = it.likes,
                                 userOpinion = it.userOpinion,
                                 like = {
-                                    viewModel.likePost(1)
+                                    if (it.userOpinion == 1) {
+                                        viewModel.likePost(LikeValue.None)
+                                    } else {
+                                        viewModel.likePost(LikeValue.Like)
+                                    }
                                 },
                                 dislike = {
-                                    viewModel.likePost(-1)
+                                    if (it.userOpinion == -1) {
+                                        viewModel.likePost(LikeValue.None)
+                                    } else {
+                                        viewModel.likePost(LikeValue.Dislike)
+                                    }
                                 }
                             )
 
@@ -121,17 +130,9 @@ fun PostScreen(
                                 comments = it.comments,
                                 userAlreadyCommented = it.userCommented,
                                 onClick = {
-                                    post.value?.let { post ->
-                                        navigationService.navigate(
-                                            Route.PostRoute(
-                                                postId = post.postId,
-                                                groupName = post.groupName
-                                            )
-                                        )
-                                    }
+                                    viewModel.getComments()
                                 }
                             )
-
                         }
                     }
                 }

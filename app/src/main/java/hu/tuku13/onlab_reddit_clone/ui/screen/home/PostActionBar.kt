@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 
@@ -15,7 +16,7 @@ import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 fun PostActionBar(
     post: Post,
     navigateToPost: () -> Unit,
-    onLike: (Int) -> Unit
+    onLike: (LikeValue) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -28,10 +29,18 @@ fun PostActionBar(
             likes = post.likes,
             userOpinion = post.userOpinion,
             like = {
-                onLike(1)
+                if(post.userOpinion == 1) {
+                    onLike(LikeValue.None)
+                } else {
+                    onLike(LikeValue.Like)
+                }
             },
             dislike = {
-                onLike(-1)
+                if(post.userOpinion == -1) {
+                    onLike(LikeValue.None)
+                } else {
+                    onLike(LikeValue.Dislike)
+                }
             }
         )
 
