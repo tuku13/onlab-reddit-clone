@@ -57,6 +57,9 @@ fun HomeScreen(
                         navigationService = navigationService,
                         onLike = { likeValue ->
                             viewModel.likePost(posts.value!![index], likeValue)
+                        },
+                        onDelete = {
+                            viewModel.deletePost(it)
                         }
                     )
                 }

@@ -67,7 +67,10 @@ fun PostScreen(
                     post.value?.let {
                         PostTitleBar(
                             post = it,
-                            navigationService = navigationService
+                            navigationService = navigationService,
+                            onDelete = { toDelete ->
+                                viewModel.deletePost(toDelete.postId)
+                            }
                         )
                     }
 

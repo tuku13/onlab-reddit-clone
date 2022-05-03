@@ -30,8 +30,11 @@ fun GroupScreen(
     val sorting = viewModel.postSorting.observeAsState(PostSorting.NEW)
     val isRefreshing = viewModel.isRefreshing.observeAsState()
 
-    LaunchedEffect(viewModel) { viewModel.refresh(groupId) }
-    LaunchedEffect(sorting.value) { viewModel.refresh(groupId) }
+    LaunchedEffect(viewModel) {
+        viewModel.groupId = groupId
+        viewModel.refresh()
+    }
+    LaunchedEffect(sorting.value) { viewModel.refresh() }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -42,7 +45,7 @@ fun GroupScreen(
     ) {
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value!!),
-            onRefresh = { viewModel.refresh(groupId) }
+            onRefresh = { viewModel.refresh() }
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
@@ -51,7 +54,12 @@ fun GroupScreen(
             ) {
                 item {
                     group.value?.let {
-                        GroupInfoCard(it)
+                        GroupInfoCard(
+                            group = it,
+                            onSubscribeClick = {
+                                viewModel.subscribe()
+                            }
+                        )
                     }
                 }
 
@@ -80,6 +88,9 @@ fun GroupScreen(
                                 likeValue = it,
                                 groupId = groupId
                             )
+                        },
+                        onDelete = {
+                            viewModel.deletePost(post.postId)
                         }
                     )
                 }

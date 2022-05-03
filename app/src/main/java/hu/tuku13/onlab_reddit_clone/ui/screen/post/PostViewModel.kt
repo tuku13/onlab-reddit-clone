@@ -118,4 +118,13 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun deletePost(postId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = postRepository.deletePost(postId)) {
+                is NetworkResult.Success -> getPost()
+                is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+            }
+        }
+    }
+
 }

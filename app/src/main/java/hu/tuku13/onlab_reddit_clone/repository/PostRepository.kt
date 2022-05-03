@@ -24,12 +24,12 @@ class PostRepository @Inject constructor(
                 NetworkResult.Error(Exception("Post not found."))
             }
 
-            val userResponse = api.getUserInfo(userId)
-            if (!userResponse.isSuccessful) {
-                NetworkResult.Error(Exception("User not found."))
-            }
+            val user = api.getUserInfo(userId).body()
+                ?: return NetworkResult.Error(Exception("User not found."))
 
-            NetworkResult.Success(postResponse.body()!!.map { it.toPost(userResponse.body()!!) })
+            val isOwnPost = user.id == authenticationService.userId.value
+
+            NetworkResult.Success(postResponse.body()!!.map { it.toPost(user, isOwnPost) })
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }
@@ -37,21 +37,15 @@ class PostRepository @Inject constructor(
 
     suspend fun getPost(postId: Long): NetworkResult<Post> {
         return try {
-            val postResponse = api.getPost(postId)
+            val postDTO = api.getPost(postId).body()
+                ?: return NetworkResult.Error(Exception("Post not found."))
 
-            if (!postResponse.isSuccessful) {
-                NetworkResult.Error(Exception("Post not found."))
-            }
-            val postDTO = postResponse.body()!!
+            val user = api.getUserInfo(postDTO.userId).body()
+                ?: return NetworkResult.Error(Exception("User not found."))
 
-            val userResponse = api.getUserInfo(postDTO.userId)
+            val isOwnPost = user.id == authenticationService.userId.value
 
-            if (!userResponse.isSuccessful) {
-                NetworkResult.Error(Exception("User not found."))
-            }
-            val user = userResponse.body()!!
-
-            val post = postDTO.toPost(user)
+            val post = postDTO.toPost(user, isOwnPost)
 
             return NetworkResult.Success(post)
         } catch (e: Exception) {
@@ -71,6 +65,7 @@ class PostRepository @Inject constructor(
                 Exception("Post not found.")
             )
             val users: MutableMap<Long, User> = mutableMapOf()
+            val isOwnPost: MutableMap<Long, Boolean> = mutableMapOf()
             val postDTOsToRemove: MutableList<PostDTO> = mutableListOf()
 
             postDTOs.forEach {
@@ -80,13 +75,19 @@ class PostRepository @Inject constructor(
                 val userResponse = api.getUserInfo(it.userId)
                 if (userResponse.isSuccessful && userResponse.body() != null) {
                     users[it.userId] = userResponse.body()!!
+                    isOwnPost[it.userId] = it.userId == authenticationService.userId.value
                 } else {
                     postDTOsToRemove.add(it)
                 }
             }
 
             postDTOs.removeAll(postDTOsToRemove)
-            NetworkResult.Success(postResponse.body()!!.map { it.toPost(users[it.userId]!!) })
+            NetworkResult.Success(postResponse.body()!!.map {
+                it.toPost(
+                    user = users[it.userId]!!,
+                    isOwnPost = isOwnPost[it.userId]!!
+                )
+            })
         } catch (e: Exception) {
             Log.d(TAG, "$e")
             NetworkResult.Error(e)
@@ -155,17 +156,29 @@ class PostRepository @Inject constructor(
 
     suspend fun getSubscribedPosts(userId: Long): NetworkResult<List<Post>> {
         return try {
-            val postResponse = api.getSubscribedPosts(userId)
-            if (!postResponse.isSuccessful) {
-                NetworkResult.Error(Exception("Post not found."))
+            val postDTOs = api.getSubscribedPosts(userId).body()
+                ?: return NetworkResult.Error(Exception("Post not found."))
+
+            val users = mutableMapOf<Long, User>()
+            val isOwnPosts = mutableMapOf<Long, Boolean>()
+            val validPostDTOs = mutableListOf<PostDTO>()
+
+            postDTOs.forEach { postDTO ->
+                val user = api.getUserInfo(postDTO.userId).body()
+
+                if (user != null) {
+                    users[postDTO.userId] = user
+                    isOwnPosts[postDTO.userId] = user.id == userId
+                    validPostDTOs.add(postDTO)
+                }
             }
 
-            val userResponse = api.getUserInfo(userId)
-            if (!userResponse.isSuccessful) {
-                NetworkResult.Error(Exception("User not found."))
-            }
-
-            NetworkResult.Success(postResponse.body()!!.map { it.toPost(userResponse.body()!!) })
+            NetworkResult.Success(validPostDTOs.map {
+                it.toPost(
+                    user = users[it.userId]!!,
+                    isOwnPost = isOwnPosts[it.userId]!!
+                )
+            })
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }
@@ -237,12 +250,33 @@ class PostRepository @Inject constructor(
             Log.d("likePost", "raw: ${response.raw()}")
 
             if (response.isSuccessful) {
-               return NetworkResult.Success(Unit)
+                return NetworkResult.Success(Unit)
             } else {
                 NetworkResult.Error(Exception(response.message()))
             }
         } catch (e: Exception) {
             NetworkResult.Error(e)
+        }
+    }
+
+    suspend fun deletePost(postId: Long): NetworkResult<Unit> {
+        try {
+            val userId = authenticationService.userId.value
+                ?: return NetworkResult.Error(Exception("User is not authenticated."))
+
+            val response = api.deletePost(
+                postId = postId,
+                userId = userId
+            )
+
+            return if (response.isSuccessful) {
+                NetworkResult.Success(Unit)
+            } else {
+                NetworkResult.Error(Exception("Forbidden. You cannot delete another user's post."))
+            }
+
+        } catch (e: Exception) {
+            return NetworkResult.Error(e)
         }
     }
 }

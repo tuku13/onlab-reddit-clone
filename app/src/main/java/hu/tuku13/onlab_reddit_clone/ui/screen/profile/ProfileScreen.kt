@@ -57,6 +57,9 @@ fun ProfileScreen(
                 navigationService = navigationService,
                 onLike = { likeValue ->
                     viewModel.likePost(post, likeValue)
+                },
+                onDelete = {
+                    viewModel.deletePost(post.postId)
                 }
             )
         }

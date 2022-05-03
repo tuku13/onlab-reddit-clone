@@ -89,4 +89,13 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun deletePost(post: Post) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when(val result = postRepository.deletePost(post.postId)) {
+                is NetworkResult.Success -> getPosts()
+                is NetworkResult.Error -> Log.d(TAG, result.exception.toString())
+            }
+        }
+    }
 }

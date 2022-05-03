@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
@@ -41,6 +42,8 @@ class GroupViewModel @Inject constructor(
     val isRefreshing: LiveData<Boolean>
         get() = _isRefreshing
 
+    var groupId = 0L
+
     fun sort(sorting: PostSorting) {
         _postSorting.value = sorting
         _posts.value?.also {
@@ -48,7 +51,7 @@ class GroupViewModel @Inject constructor(
         }
     }
 
-    fun refresh(groupId: Long) {
+    fun refresh() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = groupRepository.getGroup(groupId)) {
                 is NetworkResult.Success -> _group.postValue(result.value)
@@ -65,8 +68,29 @@ class GroupViewModel @Inject constructor(
     fun likePost(post: Post, likeValue: LikeValue, groupId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = postRepository.likePost(post.postId, likeValue)) {
-                is NetworkResult.Success -> refresh(groupId)
+                is NetworkResult.Success -> refresh()
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+            }
+        }
+    }
+
+    fun deletePost(postId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = postRepository.deletePost(postId)) {
+                is NetworkResult.Success -> refresh()
+                is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+            }
+        }
+    }
+
+    fun subscribe() {
+        val groupId = group.value?.id ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            when (val result = groupRepository.subscribe(groupId)) {
+                is NetworkResult.Success -> refresh()
+                is NetworkResult.Error -> Log.d(TAG, result.exception.toString())
             }
         }
     }

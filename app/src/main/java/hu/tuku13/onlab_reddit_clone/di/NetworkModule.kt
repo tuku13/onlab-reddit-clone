@@ -48,7 +48,10 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideGroupRepository(api: RedditCloneApi) = GroupRepository(api)
+    fun provideGroupRepository(
+        api: RedditCloneApi,
+        authenticationService: AuthenticationService
+    ) = GroupRepository(api, authenticationService)
 
     @Singleton
     @Provides

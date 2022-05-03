@@ -13,5 +13,6 @@ data class Post(
     val postImage: String,
     val timestamp: Long,
     val groupId: Long,
-    val user: User
+    val user: User,
+    val isOwnPost: Boolean
 )

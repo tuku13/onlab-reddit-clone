@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
@@ -23,7 +24,10 @@ import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 
 @Composable
-fun GroupInfoCard(group: Group) {
+fun GroupInfoCard(
+    group: Group,
+    onSubscribeClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -62,7 +66,9 @@ fun GroupInfoCard(group: Group) {
                 Row {
                     GlideImage(
                         imageModel = if (group.groupImageUrl != "") group.groupImageUrl else "https://picsum.photos/40",
-                        modifier = Modifier.clip(CircleShape).size(40.dp)
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(40.dp)
                     )
 
                     Spacer(modifier = Modifier.width(16.dp))
@@ -100,8 +106,10 @@ fun GroupInfoCard(group: Group) {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FilledButton(text = "Join") {
-                    // TODO feliratkozás csoportra
+                FilledButton(
+                    text = if (group.userSubscribed) "Joined" else "Join"
+                ) {
+                    onSubscribeClick()
                 }
 
                 if (description.length <= 53) {

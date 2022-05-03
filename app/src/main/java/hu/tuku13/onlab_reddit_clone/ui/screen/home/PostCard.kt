@@ -17,6 +17,7 @@ import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 fun PostCard(
     post: Post,
     onLike: (LikeValue) -> Unit,
+    onDelete: (Post) -> Unit,
     navigationService: NavigationService
 ) {
     Card(
@@ -31,7 +32,8 @@ fun PostCard(
         ) {
             PostTitleBar(
                 post = post,
-                navigationService = navigationService
+                navigationService = navigationService,
+                onDelete = onDelete
             )
 
             GlideImage(

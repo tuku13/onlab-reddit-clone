@@ -18,7 +18,7 @@ data class PostDTO(
     val groupId: Long,
     val userId: Long
 ) {
-    fun toPost(user: User) = Post(
+    fun toPost(user: User, isOwnPost: Boolean) = Post(
         postId = postId,
         comments = comments,
         likes = likes,
@@ -31,7 +31,8 @@ data class PostDTO(
         postImage = postImage,
         timestamp = timestamp,
         groupId = groupId,
-        user = user
+        user = user,
+        isOwnPost = isOwnPost
     )
 }
 

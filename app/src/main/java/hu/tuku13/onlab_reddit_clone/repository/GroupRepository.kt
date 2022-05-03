@@ -49,7 +49,7 @@ class GroupRepository @Inject constructor(
             val groupCreator = api.getUserInfo(groupDTO.createdBy).body()
                 ?: return NetworkResult.Error(Exception("User who created the group is not found."))
 
-            val userSubscribed = api.isUserAlreadySubscribed(groupId, UserFromDTO(userId)).body()
+            val userSubscribed = api.isUserAlreadySubscribed(groupId, userId).body()
                 ?: false
 
             NetworkResult.Success(groupDTO.toGroup(groupCreator, userSubscribed))
@@ -65,10 +65,10 @@ class GroupRepository @Inject constructor(
         return try {
             val userSubscribedResponse = api.isUserAlreadySubscribed(
                 groupId = groupId,
-                form = UserFromDTO(userId)
-            )
+                userId = userId
+            ).body() ?: false
 
-            val response = if (userSubscribedResponse.isSuccessful) {
+            val response = if (userSubscribedResponse) {
                 api.unsubscribe(groupId, UserFromDTO(userId))
             } else {
                 api.subscribe(groupId, UserFromDTO(userId))

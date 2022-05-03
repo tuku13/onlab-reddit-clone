@@ -38,39 +38,4 @@ class MessagesViewModel @Inject constructor(
         refreshContacts()
     }
 
-//    init {
-//
-////        _contacts.postValue(
-////            listOf(
-////                Contact(
-////                    userId = 0L,
-////                    name = "Pityu",
-////                    profileImageUrl = "",
-////                    lastMessage = "asddddddddddddddddddddddddddddddddddddddsdsfsdfd",
-////                    timestamp = 4352312313L
-////                ),
-////                Contact(
-////                    userId = 0L,
-////                    name = "asdsadasd",
-////                    profileImageUrl = "",
-////                    lastMessage = "asddddddddddddddddddddddddddddddddddddddsdsfsdfd",
-////                    timestamp = 12423412313L
-////                ),
-////                Contact(
-////                    userId = 1L,
-////                    name = "Pitsdfsdfsdyu",
-////                    profileImageUrl = "",
-////                    lastMessage = "ccccccccccccccccccccccccccccccccccccccccccccccccc",
-////                    timestamp = 7547365412313L
-////                ),
-////                Contact(
-////                    userId = 2L,
-////                    name = "sdfu",
-////                    profileImageUrl = "",
-////                    lastMessage = "llllllllllllllllllllllllllllllllllllll",
-////                    timestamp = 12312312313L
-////                )
-////            )
-////        )
-//    }
 }
