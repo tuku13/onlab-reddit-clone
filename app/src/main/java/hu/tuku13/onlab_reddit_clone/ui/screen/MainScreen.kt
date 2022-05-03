@@ -126,10 +126,10 @@ fun MainScreen(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Route.HomeRoute.navigation) {
-                    HomeScreen(navigationService = navigationService)
+                    HomeScreen(navigationService)
                 }
                 composable(Route.CreateGroupRoute.navigation) {
-                    CreateGroupScreen()
+                    CreateGroupScreen(navigationService)
                 }
                 composable(Route.MessagesRoute.navigation) {
                     MessagesScreen(navigationService)

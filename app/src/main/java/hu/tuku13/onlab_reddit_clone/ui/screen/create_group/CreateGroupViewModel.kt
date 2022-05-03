@@ -1,12 +1,17 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.create_group
 
+import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.CreateGroupForm
 import hu.tuku13.onlab_reddit_clone.repository.GroupRepository
+import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,23 +24,48 @@ class CreateGroupViewModel @Inject constructor(
     private val authenticationService: AuthenticationService
 ) : ViewModel() {
 
-    fun createGroup(groupName: String, description: String, imageUrl: String) {
+    private var _groupCreated: MutableLiveData<Group?> = MutableLiveData(null)
+    val groupCreated: LiveData<Group?>
+        get() = _groupCreated
+
+    fun createGroup(groupName: String, description: String, uri: Uri?) {
+        if(groupName.isBlank() || description.isBlank()) {
+            return
+        }
+
         viewModelScope.launch(Dispatchers.IO) {
-            val createdGroupId = groupRepository.createGroup(
+            var imageUrl = ""
+
+            if (uri != null) {
+                when (val response = groupRepository.uploadImage(uri)) {
+                    is NetworkResult.Success -> imageUrl = response.value
+                    is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+                }
+            }
+
+            return@launch
+
+            when (val response = groupRepository.createGroup(
                 CreateGroupForm(
                     userId = authenticationService.userId.value!!,
                     groupName = groupName,
                     description = description,
                     imageUrl = imageUrl
                 )
-            )
-
-            if(createdGroupId != -1L) {
-                Log.d(TAG, "Successful, created with id: $createdGroupId")
-            } else {
-                Log.d(TAG, "Error creating group")
+            )) {
+                is NetworkResult.Success -> getGroup(response.value)
+                is NetworkResult.Error -> Log.d(TAG, "Error creating group.")
             }
 
+        }
+    }
+
+    private fun getGroup(groupId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = groupRepository.getGroup(groupId)) {
+                is NetworkResult.Success -> _groupCreated.postValue(response.value)
+                is NetworkResult.Error -> Log.d(TAG, "Created not found.")
+            }
         }
     }
 }

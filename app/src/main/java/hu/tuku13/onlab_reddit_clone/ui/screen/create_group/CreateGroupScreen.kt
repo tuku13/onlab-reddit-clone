@@ -1,35 +1,40 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.create_group
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import android.content.Context
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import com.skydoves.landscapist.glide.GlideImage
-import hu.tuku13.onlab_reddit_clone.R
-import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
-import hu.tuku13.onlab_reddit_clone.ui.components.OutlinedButton
-import hu.tuku13.onlab_reddit_clone.ui.components.TextField
-import hu.tuku13.onlab_reddit_clone.ui.components.TonalButton
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Observer
+import hu.tuku13.onlab_reddit_clone.domain.model.Group
+import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.ui.components.*
+import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 @Composable
-fun CreateGroupScreen() {
+fun CreateGroupScreen(
+    navigationService: NavigationService,
+    viewModel: CreateGroupViewModel = hiltViewModel()
+) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    var groupName by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -37,9 +42,22 @@ fun CreateGroupScreen() {
             .padding(16.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
-        var groupName by remember { mutableStateOf("") }
-        var description by remember { mutableStateOf("") }
-        var imageUrl by remember { mutableStateOf("") }
+        DisposableEffect(lifecycleOwner) {
+            val observer: Observer<Group?> = Observer {
+                if(it != null) {
+                    navigationService.navigate(Route.GroupRoute(
+                        groupId = it.id,
+                        groupName = it.name
+                    ))
+                }
+            }
+
+            viewModel.groupCreated.observe(lifecycleOwner, observer)
+
+            onDispose {
+                viewModel.groupCreated.removeObserver(observer)
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -60,7 +78,7 @@ fun CreateGroupScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         ImageUploader(
-            onUpload = { imageUrl = it }
+            onUpload = { imageUri = it }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -68,79 +86,26 @@ fun CreateGroupScreen() {
         Row {
             OutlinedButton(
                 text = "Cancel",
-                onClick = {}
+                onClick = {
+                    groupName = ""
+                    description = ""
+                    imageUri = null
+                }
             )
 
             Spacer(modifier = Modifier.width(8.dp))
 
             TonalButton(
                 text = "Create",
-                onClick = {}
+                onClick = {
+                    viewModel.createGroup(groupName, description, imageUri)
+                }
             )
         }
 
     }
 }
 
-//TODO darkmodeban a placeholder kép jobb és bal szélén sem jó a border
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ImageUploader(
-    onUpload: (String) -> Unit
-) {
-    Card(
-        modifier = Modifier.size(360.dp).wrapContentHeight(),
-        containerColor = MaterialTheme.colorScheme.background,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
-    ) {
-        Column {
-            Row(
-                modifier = Modifier
-                    .height(72.dp)
-                    .fillMaxWidth()
-                    .padding(start = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Text(
-                    text = "Group Image",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-
-            Box(modifier = Modifier.width(360.dp).height(200.dp)) {
-                GlideImage(
-                    imageModel = Image(
-                        painter = painterResource(R.drawable.upload_image_placeholder),
-                        contentDescription = "Uploaded image",
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier.width(360.dp)
-                    ),
-                    modifier = Modifier.width(360.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier.height(72.dp).fillMaxWidth().padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ) {
-                OutlinedButton(
-                    text = "Delete",
-                    onClick = { }
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                FilledButton(
-                    text = "Edit",
-                    onClick = { }
-                )
-
-            }
-
-        }
-    }
+fun getPathFromUri(uri: Uri, context: Context) {
+    val fileDescriptor = context.contentResolver.openFileDescriptor(uri, "")
 }

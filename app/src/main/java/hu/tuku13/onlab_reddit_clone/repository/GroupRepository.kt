@@ -1,6 +1,8 @@
 package hu.tuku13.onlab_reddit_clone.repository
 
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toFile
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.CreateGroupForm
@@ -8,6 +10,9 @@ import hu.tuku13.onlab_reddit_clone.network.model.GroupDTO
 import hu.tuku13.onlab_reddit_clone.network.model.UserFromDTO
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import java.io.File
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
@@ -16,15 +21,14 @@ class GroupRepository @Inject constructor(
 ) {
     val TAG = "Group Repo"
 
-    suspend fun createGroup(form: CreateGroupForm): Long {
-        val response = api.createGroup(form)
+    suspend fun createGroup(form: CreateGroupForm): NetworkResult<Long> {
+        return try {
+            val groupId = api.createGroup(form).body()
+                ?: return NetworkResult.Error(Exception("Error creating group."))
 
-        return if (response.isSuccessful) {
-            response.body()!!
-        } else {
-            Log.d(TAG, "Error creating group")
-            // TODO lekezelni
-            -1L
+            NetworkResult.Success(groupId)
+        } catch (e: Exception) {
+            NetworkResult.Error(e)
         }
     }
 
@@ -80,6 +84,28 @@ class GroupRepository @Inject constructor(
                 NetworkResult.Error(Exception("Unknown error."))
             }
 
+        } catch (e: Exception) {
+            NetworkResult.Error(e)
+        }
+    }
+
+    suspend fun uploadImage(imageUri: Uri): NetworkResult<String> {
+        return try {
+            val file = imageUri.toFile()
+
+            Log.d(TAG, "file: $file")
+
+            val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), file)
+
+            val response = api.uploadImage(requestBody)
+            val uploadedImageUrl = response.body()
+
+            if (uploadedImageUrl != null) {
+                Log.d(TAG, "uploadedImageUrl: $uploadedImageUrl")
+                NetworkResult.Success(uploadedImageUrl)
+            } else {
+                NetworkResult.Error(Exception("${response.body()}"))
+            }
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }
