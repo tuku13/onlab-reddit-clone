@@ -38,12 +38,13 @@ class CreateGroupViewModel @Inject constructor(
 
             if (uri != null) {
                 when (val response = groupRepository.uploadImage(uri)) {
-                    is NetworkResult.Success -> imageUrl = response.value
-                    is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
+                    is NetworkResult.Success -> {
+                        Log.d("createGroup", "url: ${response.value}")
+                        imageUrl = response.value
+                    }
+                    is NetworkResult.Error -> Log.d(TAG, "${response.exception}")
                 }
             }
-
-            return@launch
 
             when (val response = groupRepository.createGroup(
                 CreateGroupForm(

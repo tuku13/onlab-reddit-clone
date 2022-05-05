@@ -2,27 +2,31 @@ package hu.tuku13.onlab_reddit_clone.repository
 
 import android.net.Uri
 import android.util.Log
-import androidx.core.net.toFile
+import hu.tuku13.onlab_reddit_clone.Constants
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
+import hu.tuku13.onlab_reddit_clone.domain.service.FileService
 import hu.tuku13.onlab_reddit_clone.network.model.CreateGroupForm
 import hu.tuku13.onlab_reddit_clone.network.model.GroupDTO
 import hu.tuku13.onlab_reddit_clone.network.model.UserFromDTO
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
-import okhttp3.MediaType
-import okhttp3.RequestBody
-import java.io.File
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.*
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
     private val api: RedditCloneApi,
-    private val authenticationService: AuthenticationService
+    private val authenticationService: AuthenticationService,
+    private val fileService: FileService
 ) {
     val TAG = "Group Repo"
 
     suspend fun createGroup(form: CreateGroupForm): NetworkResult<Long> {
         return try {
+            Log.d("createGroup", "url: ${form.imageUrl}")
             val groupId = api.createGroup(form).body()
                 ?: return NetworkResult.Error(Exception("Error creating group."))
 
@@ -91,22 +95,40 @@ class GroupRepository @Inject constructor(
 
     suspend fun uploadImage(imageUri: Uri): NetworkResult<String> {
         return try {
-            val file = imageUri.toFile()
+            val result = fileService.loadImage(imageUri)
+            if (result !is NetworkResult.Success) {
+                return NetworkResult.Error(Exception("File loading error"))
+            }
 
-            Log.d(TAG, "file: $file")
+            val bytes = result.value
 
-            val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), file)
+            val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), bytes)
+            val body = MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file", "image.png", requestBody)
+                .build()
 
-            val response = api.uploadImage(requestBody)
-            val uploadedImageUrl = response.body()
+            val request = Request.Builder()
+                .url("${Constants.BASE_URL}/images/upload")
+                .method("POST", body)
+                .addHeader("Content-Type", "image/png")
+                .build()
 
-            if (uploadedImageUrl != null) {
-                Log.d(TAG, "uploadedImageUrl: $uploadedImageUrl")
-                NetworkResult.Success(uploadedImageUrl)
+            val client = OkHttpClient().newBuilder().build()
+
+            val url = withContext(Dispatchers.IO) {
+                client.newCall(request).execute().use { response ->
+                    return@use response.body()?.string()
+                }
+            }
+
+            return if (url != null) {
+                Log.d("uploadImage", "url: $url")
+                NetworkResult.Success("${Constants.BASE_URL}/$url")
             } else {
-                NetworkResult.Error(Exception("${response.body()}"))
+                NetworkResult.Error(Exception(""))
             }
         } catch (e: Exception) {
+            Log.d("Exception", "Hiba elkapva: $e")
             NetworkResult.Error(e)
         }
     }

@@ -1,6 +1,7 @@
 package hu.tuku13.onlab_reddit_clone.ui.components
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -39,6 +40,7 @@ fun ImageUploader(
         val launcher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent()
         ) { uri ->
+            Log.d("ImageUploader", "image uri: $uri")
             imageUri = uri
             onUpload(uri)
         }
