@@ -1,26 +1,20 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.group
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 import hu.tuku13.onlab_reddit_clone.ui.components.TonalButton
-import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 
 @Composable

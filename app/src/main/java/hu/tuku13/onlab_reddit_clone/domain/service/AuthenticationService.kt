@@ -35,5 +35,7 @@ class AuthenticationService @Inject constructor(
         _userId.value = 0
     }
 
-    suspend fun register() {}
+    suspend fun register() {
+        // TODO
+    }
 }

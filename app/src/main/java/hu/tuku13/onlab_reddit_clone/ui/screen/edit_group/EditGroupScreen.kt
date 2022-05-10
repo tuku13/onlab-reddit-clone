@@ -1,36 +1,59 @@
-package hu.tuku13.onlab_reddit_clone.ui.screen.create_group
+package hu.tuku13.onlab_reddit_clone.ui.screen.edit_group
 
-import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Observer
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.components.ImageUploader
 import hu.tuku13.onlab_reddit_clone.ui.components.OutlinedButton
 import hu.tuku13.onlab_reddit_clone.ui.components.TextField
 import hu.tuku13.onlab_reddit_clone.ui.components.TonalButton
-import hu.tuku13.onlab_reddit_clone.navigation.Route
 
 @Composable
-fun CreateGroupScreen(
+fun EditGroupScreen(
+    groupId: Long,
     navigationService: NavigationService,
-    viewModel: CreateGroupViewModel = hiltViewModel()
+    viewModel: EditGroupViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    val group = viewModel.group.observeAsState()
     var groupName by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    LaunchedEffect(viewModel) {
+        viewModel.loadGroup(groupId)
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer: Observer<Group?> = Observer {
+            if(it != null) {
+                groupName = it.name
+                description = it.description
+            }
+        }
+
+        viewModel.group.observe(lifecycleOwner, observer)
+
+        onDispose {
+            viewModel.group.removeObserver(observer)
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,23 +62,6 @@ fun CreateGroupScreen(
             .padding(16.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
-        DisposableEffect(lifecycleOwner) {
-            val observer: Observer<Group?> = Observer {
-                if(it != null) {
-                    navigationService.navigate(
-                        Route.GroupRoute(
-                        groupId = it.id,
-                        groupName = it.name
-                    ))
-                }
-            }
-
-            viewModel.groupCreated.observe(lifecycleOwner, observer)
-
-            onDispose {
-                viewModel.groupCreated.removeObserver(observer)
-            }
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -76,6 +82,7 @@ fun CreateGroupScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         ImageUploader(
+            defaultImageUrl = group.value?.groupImageUrl,
             onUpload = { imageUri = it }
         )
 
@@ -94,12 +101,17 @@ fun CreateGroupScreen(
             Spacer(modifier = Modifier.width(8.dp))
 
             TonalButton(
-                text = "Create",
+                text = "Save",
                 onClick = {
-                    viewModel.createGroup(groupName, description, imageUri)
+                    viewModel.editGroup(
+                        groupId = groupId,
+                        groupName = groupName,
+                        description = description,
+                        imageUri = imageUri
+                    )
                 }
             )
         }
-
     }
+
 }

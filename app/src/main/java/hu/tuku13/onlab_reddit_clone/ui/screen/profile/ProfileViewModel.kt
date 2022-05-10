@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
-import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
-import hu.tuku13.onlab_reddit_clone.network.model.PostDTO
 import hu.tuku13.onlab_reddit_clone.domain.model.User
+import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.repository.PostRepository
 import hu.tuku13.onlab_reddit_clone.repository.UserRepository
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.TAG

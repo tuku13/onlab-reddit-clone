@@ -6,12 +6,11 @@ import hu.tuku13.onlab_reddit_clone.Constants
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.domain.service.FileService
-import hu.tuku13.onlab_reddit_clone.network.model.CreateGroupForm
+import hu.tuku13.onlab_reddit_clone.network.model.GroupForm
 import hu.tuku13.onlab_reddit_clone.network.model.GroupDTO
 import hu.tuku13.onlab_reddit_clone.network.model.UserFromDTO
 import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.*
@@ -24,13 +23,49 @@ class GroupRepository @Inject constructor(
 ) {
     val TAG = "Group Repo"
 
-    suspend fun createGroup(form: CreateGroupForm): NetworkResult<Long> {
+    suspend fun createGroup(form: GroupForm): NetworkResult<Long> {
         return try {
             Log.d("createGroup", "url: ${form.imageUrl}")
             val groupId = api.createGroup(form).body()
                 ?: return NetworkResult.Error(Exception("Error creating group."))
 
             NetworkResult.Success(groupId)
+        } catch (e: Exception) {
+            NetworkResult.Error(e)
+        }
+    }
+
+    suspend fun editGroup(groupId: Long, groupName: String?, groupDescription: String?, imageUri: Uri?): NetworkResult<Unit> {
+        // TODO okhttp exception: java.lang.Exception: okhttp3.ResponseBody$1@62d5ccd
+        return try {
+            val userId = authenticationService.userId.value
+                ?: return NetworkResult.Error(Exception("User is not authenticated"))
+
+            var url: String? = null
+            val name: String? = if(groupName != null && groupName.isNotBlank()) groupName else null
+            val description: String? = if(groupDescription != null && groupDescription.isNotBlank()) groupDescription else null
+
+            if(imageUri != null) {
+                val response = uploadImage(imageUri)
+                if (response is NetworkResult.Success) {
+                    url = response.value
+                }
+            }
+
+            val form = GroupForm(
+                userId = userId,
+                groupName = name,
+                description = description,
+                imageUrl = url
+            )
+
+            val response = api.editGroup(groupId, form)
+
+            if(response.isSuccessful) {
+                NetworkResult.Success(Unit)
+            } else {
+                NetworkResult.Error(Exception("${response.errorBody()}"))
+            }
         } catch (e: Exception) {
             NetworkResult.Error(e)
         }

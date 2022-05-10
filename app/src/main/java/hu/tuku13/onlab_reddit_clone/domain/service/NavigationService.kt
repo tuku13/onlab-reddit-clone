@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
-import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
+import hu.tuku13.onlab_reddit_clone.navigation.Route
 
 
 class NavigationService {

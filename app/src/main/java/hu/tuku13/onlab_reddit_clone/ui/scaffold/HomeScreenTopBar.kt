@@ -4,11 +4,14 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
-import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
+import hu.tuku13.onlab_reddit_clone.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 
 @Composable

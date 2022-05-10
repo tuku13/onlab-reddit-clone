@@ -1,6 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.messages
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
-import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
+import hu.tuku13.onlab_reddit_clone.navigation.Route
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,7 +29,8 @@ fun MessagesScreen(
             ContactCard(
                 contact = contact,
                 onClick = {
-                    navigationService.navigate(Route.ConversationRoute(
+                    navigationService.navigate(
+                        Route.ConversationRoute(
                         partnerUserId = it,
                         partnerUserName = contact.name,
                         partnerProfileImageUrl = profileImageUrl

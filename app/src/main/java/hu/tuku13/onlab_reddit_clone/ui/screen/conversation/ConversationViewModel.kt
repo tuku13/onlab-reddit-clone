@@ -11,7 +11,6 @@ import hu.tuku13.onlab_reddit_clone.network.model.Message
 import hu.tuku13.onlab_reddit_clone.network.model.MessageForm
 import hu.tuku13.onlab_reddit_clone.repository.MessageRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

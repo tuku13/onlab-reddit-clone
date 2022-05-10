@@ -8,8 +8,6 @@ import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.TrendingUp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting

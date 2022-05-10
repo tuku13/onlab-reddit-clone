@@ -1,33 +1,33 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import hu.tuku13.onlab_reddit_clone.ui.screen.create_group.CreateGroupScreen
-import hu.tuku13.onlab_reddit_clone.ui.screen.home.HomeScreen
-import hu.tuku13.onlab_reddit_clone.ui.screen.messages.MessagesScreen
-import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.*
+import androidx.navigation.navArgument
 import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
-import hu.tuku13.onlab_reddit_clone.ui.navigation.Route
+import hu.tuku13.onlab_reddit_clone.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.scaffold.*
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.create_group.CreateGroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.create_post.CreatePostScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.edit_group.EditGroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.group.GroupScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.home.HomeScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.messages.MessagesScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.post.PostScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupViewModel
 
@@ -53,11 +53,15 @@ fun MainScreen(
     Scaffold(
         topBar = {
             when (route.value) {
-                is Route.ConversationRoute -> SubScreenTopBar(
-                    title = route.value.title,
-                    navigationService = navigationService
+                is Route.GroupRoute -> GroupScreenTopBar(
+                    groupName = (route.value as Route.GroupRoute).groupName,
+                    groupId = (route.value as Route.GroupRoute).groupId,
+                    navigationService = navigationService,
                 )
-                is Route.GroupRoute -> SubScreenTopBar(
+                is Route.EditGroupRoute,
+                is Route.CreatePostRoute,
+                is Route.PostRoute,
+                is Route.ConversationRoute -> SubScreenTopBar(
                     title = route.value.title,
                     navigationService = navigationService
                 )
@@ -66,21 +70,13 @@ fun MainScreen(
                     viewModel = searchGroupViewModel
                 )
                 is Route.HomeRoute -> HomeScreenTopBar(navigationService = navigationService)
-                is Route.CreatePostRoute -> SubScreenTopBar(
-                    title = route.value.title,
-                    navigationService = navigationService
-                )
-                is Route.PostRoute -> SubScreenTopBar(
-                    title = route.value.title,
-                    navigationService = navigationService
-                )
                 else -> BaseScreenTopBar(title = route.value.title)
             }
         },
         bottomBar = {
             when (route.value) {
-                is Route.ConversationRoute -> {}
-                is Route.SearchGroupRoute -> {}
+                is Route.ConversationRoute,
+                is Route.SearchGroupRoute,
                 is Route.PostRoute -> {}
                 else -> BottomBar(
                     routes = listOf(
@@ -207,6 +203,20 @@ fun MainScreen(
                     // TODO PostScreen topappbar visszanyíl
                     PostScreen(
                         postId = postId,
+                        navigationService = navigationService
+                    )
+                }
+                composable(
+                    route = Route.EditGroupRoute.navigation,
+                    arguments = listOf(
+                        navArgument("groupId"){
+                            type = NavType.LongType
+                        }
+                    )
+                ) {
+                    val groupId = it.arguments?.getLong("groupId") ?: 0L
+                    EditGroupScreen(
+                        groupId = groupId,
                         navigationService = navigationService
                     )
                 }

@@ -1,6 +1,5 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.group
 
-import android.os.FileUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,13 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.data.mediastore.MediaStoreUtil
-import com.bumptech.glide.load.model.ByteArrayLoader
-import com.bumptech.glide.load.model.MediaStoreFileLoader
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting

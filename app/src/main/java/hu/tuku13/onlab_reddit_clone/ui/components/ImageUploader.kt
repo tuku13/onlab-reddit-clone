@@ -11,13 +11,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
@@ -26,6 +23,7 @@ import hu.tuku13.onlab_reddit_clone.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageUploader(
+    defaultImageUrl: String? = null,
     onUpload: (Uri?) -> Unit
 ) {
     Card(
@@ -66,7 +64,7 @@ fun ImageUploader(
                     .width(360.dp)
                     .height(200.dp)
             ) {
-                if(imageUri != null) {
+                if (imageUri != null) {
                     GlideImage(
                         imageModel = imageUri,
                         modifier = Modifier.width(360.dp),
@@ -74,15 +72,24 @@ fun ImageUploader(
                         contentScale = ContentScale.FillWidth,
                     )
                 } else {
-                    GlideImage(
-                        imageModel = Image(
-                            painter = painterResource(R.drawable.upload_image_placeholder),
-                            contentDescription = "Uploaded image",
+                    if(defaultImageUrl != null) {
+                        GlideImage(
+                            imageModel = defaultImageUrl,
                             contentScale = ContentScale.FillWidth,
+                            contentDescription = "Uploaded image",
                             modifier = Modifier.width(360.dp)
-                        ),
-                        modifier = Modifier.width(360.dp)
-                    )
+                        )
+                    } else {
+                        GlideImage(
+                            imageModel = Image(
+                                painter = painterResource(R.drawable.upload_image_placeholder),
+                                contentDescription = "Uploaded image",
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier.width(360.dp)
+                            ),
+                            modifier = Modifier.width(360.dp)
+                        )
+                    }
                 }
             }
 

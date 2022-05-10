@@ -1,6 +1,5 @@
 package hu.tuku13.onlab_reddit_clone.ui.scaffold
 
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -9,13 +8,10 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupViewModel
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended

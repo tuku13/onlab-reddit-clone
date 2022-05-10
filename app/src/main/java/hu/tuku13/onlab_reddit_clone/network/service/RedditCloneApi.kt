@@ -1,13 +1,10 @@
 package hu.tuku13.onlab_reddit_clone.network.service
 
-import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.network.model.*
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
-import java.io.File
 
 interface RedditCloneApi {
     @GET("/groups")
@@ -26,7 +23,7 @@ interface RedditCloneApi {
     suspend fun getUserPost(@Path("user-id") userId: Long): Response<List<PostDTO>>
 
     @POST("/groups/new")
-    suspend fun createGroup(@Body form: CreateGroupForm): Response<Long>
+    suspend fun createGroup(@Body form: GroupForm): Response<Long>
 
     @FormUrlEncoded
     @POST("/contacts")
@@ -83,4 +80,7 @@ interface RedditCloneApi {
     @Multipart
     @POST("/images/upload")
     suspend fun uploadImage(@Part("file") body: RequestBody): Response<String>
+
+    @PUT("/groups/{id}")
+    suspend fun editGroup(@Path("id") groupId: Long, @Body form: GroupForm): Response<Unit>
 }

@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.ui.navigation
+package hu.tuku13.onlab_reddit_clone.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -93,6 +93,16 @@ sealed class Route(
     ) {
         companion object {
             const val navigation = "post/{postId}"
+        }
+    }
+
+    class EditGroupRoute(val groupId: Long) : Route(
+        title = "Edit Group",
+        route = "edit_group/$groupId",
+        navigation = "edit_group/{groupId}"
+    ) {
+        companion object {
+            const val navigation = "edit_group/{groupId}"
         }
     }
 }
