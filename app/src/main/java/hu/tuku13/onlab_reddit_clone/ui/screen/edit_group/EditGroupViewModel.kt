@@ -26,6 +26,10 @@ class EditGroupViewModel @Inject constructor(
     val group: LiveData<Group?>
         get() = _group
 
+    private val _successful: MutableLiveData<Boolean> = MutableLiveData(false)
+    val successful: LiveData<Boolean>
+        get() = _successful
+
     fun loadGroup(groupId: Long) {
         viewModelScope.launch(dispatcher) {
             when (val response = groupRepository.getGroup(groupId)) {
@@ -38,8 +42,8 @@ class EditGroupViewModel @Inject constructor(
     fun editGroup(groupId: Long, groupName: String?, description: String?, imageUri: Uri?) {
         viewModelScope.launch(dispatcher) {
             when (val response = groupRepository.editGroup(groupId, groupName, description, imageUri)) {
-                is NetworkResult.Success -> Log.d(TAG, "Succesfully edited")
-                is NetworkResult.Error -> Log.d(TAG, "editGroup ${response.exception}" )
+                is NetworkResult.Success -> _successful.postValue(true)
+                is NetworkResult.Error -> Log.d(TAG, "editGroup ${response.exception}")
             }
         }
     }

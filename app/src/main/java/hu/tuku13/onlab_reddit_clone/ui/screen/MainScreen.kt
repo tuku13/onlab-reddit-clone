@@ -39,7 +39,7 @@ fun MainScreen(
 ) {
     val navController = rememberNavController()
 
-    LaunchedEffect(key1 = navigationService) {
+    LaunchedEffect(navigationService) {
         navigationService.navController = navController
     }
 
@@ -53,11 +53,7 @@ fun MainScreen(
     Scaffold(
         topBar = {
             when (route.value) {
-                is Route.GroupRoute -> GroupScreenTopBar(
-                    groupName = (route.value as Route.GroupRoute).groupName,
-                    groupId = (route.value as Route.GroupRoute).groupId,
-                    navigationService = navigationService,
-                )
+                is Route.GroupRoute -> {}
                 is Route.EditGroupRoute,
                 is Route.CreatePostRoute,
                 is Route.PostRoute,
@@ -200,7 +196,6 @@ fun MainScreen(
                     )
                 ) {
                     val postId = it.arguments?.getLong("postId") ?: 0L
-                    // TODO PostScreen topappbar visszanyíl
                     PostScreen(
                         postId = postId,
                         navigationService = navigationService

@@ -61,10 +61,14 @@ class GroupRepository @Inject constructor(
 
             val response = api.editGroup(groupId, form)
 
+            Log.d(TAG, "respone: ${response.message()}")
+            Log.d(TAG, "code: ${response.code()}")
+            Log.d(TAG, "raw: ${response.raw()}")
+
             if(response.isSuccessful) {
                 NetworkResult.Success(Unit)
             } else {
-                NetworkResult.Error(Exception("${response.errorBody()}"))
+                NetworkResult.Error(Exception("${response.errorBody()?.string()}"))
             }
         } catch (e: Exception) {
             NetworkResult.Error(e)

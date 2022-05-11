@@ -1,6 +1,7 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.edit_group
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -41,17 +42,36 @@ fun EditGroupScreen(
     }
 
     DisposableEffect(lifecycleOwner) {
-        val observer: Observer<Group?> = Observer {
-            if(it != null) {
+        val groupObserver: Observer<Group?> = Observer {
+            if (it != null) {
                 groupName = it.name
                 description = it.description
             }
         }
 
-        viewModel.group.observe(lifecycleOwner, observer)
+        val resultObserver: Observer<Boolean> = Observer { isEditSuccessful ->
+            if (isEditSuccessful) {
+                navigationService.popBackStack()
+                navigationService.popBackStack()
+
+                val name = group.value?.name ?: groupName
+                Log.d("EditGroupScreen", name)
+
+                navigationService.navigate(
+                    Route.GroupRoute(
+                        groupId = groupId,
+                        groupName = name
+                    )
+                )
+            }
+        }
+
+        viewModel.group.observe(lifecycleOwner, groupObserver)
+        viewModel.successful.observe(lifecycleOwner, resultObserver)
 
         onDispose {
-            viewModel.group.removeObserver(observer)
+            viewModel.group.removeObserver(groupObserver)
+            viewModel.successful.removeObserver(resultObserver)
         }
     }
 
@@ -92,9 +112,7 @@ fun EditGroupScreen(
             OutlinedButton(
                 text = "Cancel",
                 onClick = {
-                    groupName = ""
-                    description = ""
-                    imageUri = null
+                    navigationService.popBackStack()
                 }
             )
 
@@ -103,15 +121,21 @@ fun EditGroupScreen(
             TonalButton(
                 text = "Save",
                 onClick = {
-                    viewModel.editGroup(
-                        groupId = groupId,
-                        groupName = groupName,
-                        description = description,
-                        imageUri = imageUri
-                    )
+                    group.value?.let {
+                        if (it.name == groupName && it.description == description && imageUri == null) {
+                            navigationService.popBackStack()
+                        } else {
+                            viewModel.editGroup(
+                                groupId = groupId,
+                                groupName = if (it.name == groupName) null else groupName,
+                                description = if (it.description == description) null else description,
+                                imageUri = imageUri
+                            )
+                        }
+                    }
                 }
             )
+
         }
     }
-
 }
