@@ -3,7 +3,7 @@ package hu.tuku13.onlab_reddit_clone.ui.screen.authentication
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
+import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject

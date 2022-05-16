@@ -4,12 +4,12 @@ import android.net.Uri
 import android.util.Log
 import hu.tuku13.onlab_reddit_clone.Constants
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
-import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
-import hu.tuku13.onlab_reddit_clone.domain.service.FileService
+import hu.tuku13.onlab_reddit_clone.service.file.FileService
 import hu.tuku13.onlab_reddit_clone.network.model.GroupForm
 import hu.tuku13.onlab_reddit_clone.network.model.GroupDTO
 import hu.tuku13.onlab_reddit_clone.network.model.UserFromDTO
-import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.service.api.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

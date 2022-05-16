@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
-import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
 import hu.tuku13.onlab_reddit_clone.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.components.ChipGroup
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.PostCard

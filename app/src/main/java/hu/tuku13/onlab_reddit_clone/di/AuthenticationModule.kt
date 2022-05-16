@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
-import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.service.api.AuthenticationApi
+import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
 import javax.inject.Singleton
 
 @Module
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 class AuthenticationModule {
     @Singleton
     @Provides
-    fun provideAuthenticationService(api: RedditCloneApi) = AuthenticationService(api)
+    fun provideAuthenticationService(api: AuthenticationApi) = AuthenticationService(api)
 }

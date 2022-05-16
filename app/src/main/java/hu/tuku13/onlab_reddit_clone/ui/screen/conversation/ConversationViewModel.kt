@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.GetMessageForm
 import hu.tuku13.onlab_reddit_clone.network.model.Message
 import hu.tuku13.onlab_reddit_clone.network.model.MessageForm
 import hu.tuku13.onlab_reddit_clone.repository.MessageRepository
+import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject

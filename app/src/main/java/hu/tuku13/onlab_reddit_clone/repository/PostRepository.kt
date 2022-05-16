@@ -5,9 +5,9 @@ import hu.tuku13.onlab_reddit_clone.domain.model.Comment
 import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.domain.model.User
-import hu.tuku13.onlab_reddit_clone.domain.service.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.network.model.*
-import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.service.api.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
 import javax.inject.Inject
 

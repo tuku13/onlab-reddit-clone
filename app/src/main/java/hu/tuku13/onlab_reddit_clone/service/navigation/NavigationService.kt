@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.domain.service
+package hu.tuku13.onlab_reddit_clone.service.navigation
 
 import android.util.Log
 import androidx.lifecycle.LiveData

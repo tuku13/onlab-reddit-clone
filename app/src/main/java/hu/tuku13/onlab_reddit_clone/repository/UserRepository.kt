@@ -1,7 +1,7 @@
 package hu.tuku13.onlab_reddit_clone.repository
 
 import hu.tuku13.onlab_reddit_clone.domain.model.User
-import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.service.api.RedditCloneApi
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(

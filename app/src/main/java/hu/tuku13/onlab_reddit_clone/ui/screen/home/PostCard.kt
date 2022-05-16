@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
-import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
 import hu.tuku13.onlab_reddit_clone.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)

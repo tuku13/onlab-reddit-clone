@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.network.service
+package hu.tuku13.onlab_reddit_clone.service.api
 
 import hu.tuku13.onlab_reddit_clone.domain.model.User
 import hu.tuku13.onlab_reddit_clone.network.model.*
@@ -9,9 +9,6 @@ import retrofit2.http.*
 interface RedditCloneApi {
     @GET("/groups")
     suspend fun getGroups(): Response<List<GroupDTO>>
-
-    @POST("/login")
-    suspend fun login(@Body loginForm: LoginForm): Response<Long>
 
     @GET("/posts/subscribed")
     suspend fun getSubscribedPosts(@Query("user-id") userId: Long): Response<List<PostDTO>>

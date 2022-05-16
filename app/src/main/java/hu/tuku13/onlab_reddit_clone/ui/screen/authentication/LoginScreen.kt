@@ -25,7 +25,6 @@ const val TAG = "LoginScreen"
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
-    onLogin: () -> Unit,
     onRegister: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {

@@ -32,7 +32,6 @@ fun AuthenticationScreen() {
         content = {
             when (authenticationState) {
                 AuthenticationState.LOGIN -> LoginScreen(
-                    onLogin = { },
                     onRegister = { authenticationState = AuthenticationState.REGISTER }
                 )
                 AuthenticationState.REGISTER -> RegisterScreen(

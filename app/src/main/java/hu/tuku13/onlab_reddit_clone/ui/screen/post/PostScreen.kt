@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
-import hu.tuku13.onlab_reddit_clone.domain.service.NavigationService
+import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.MessageInputBar
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.Comment
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.LikeBar

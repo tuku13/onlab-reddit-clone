@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import hu.tuku13.onlab_reddit_clone.domain.service.FileService
+import hu.tuku13.onlab_reddit_clone.service.file.FileService
 import javax.inject.Singleton
 
 @Module

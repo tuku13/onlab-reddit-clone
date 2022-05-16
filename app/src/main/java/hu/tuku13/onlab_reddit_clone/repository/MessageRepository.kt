@@ -4,7 +4,7 @@ import hu.tuku13.onlab_reddit_clone.network.model.Contact
 import hu.tuku13.onlab_reddit_clone.network.model.GetMessageForm
 import hu.tuku13.onlab_reddit_clone.network.model.Message
 import hu.tuku13.onlab_reddit_clone.network.model.MessageForm
-import hu.tuku13.onlab_reddit_clone.network.service.RedditCloneApi
+import hu.tuku13.onlab_reddit_clone.service.api.RedditCloneApi
 import javax.inject.Inject
 
 class MessageRepository @Inject constructor(
