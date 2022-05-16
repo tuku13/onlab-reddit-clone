@@ -5,9 +5,11 @@ import okhttp3.Response
 
 class AuthInterceptor(private val authenticationService: AuthenticationService) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request().newBuilder()
-                .header("Authorization", authenticationService.token)
+        val request = authenticationService.token.value?.let {
+            chain.request().newBuilder()
+                .header("Authorization", it)
                 .build()
+        }
         return chain.proceed(request)
     }
 }

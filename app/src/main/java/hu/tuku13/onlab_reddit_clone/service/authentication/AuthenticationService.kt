@@ -19,8 +19,8 @@ class AuthenticationService @Inject constructor(
     val userId: LiveData<Long>
         get() = _userId
 
-    private var _token: String = ""
-    val token: String
+    private var _token: MutableLiveData<String> = MutableLiveData("")
+    val token: LiveData<String>
         get() = _token
 
     suspend fun login(username: String, password: String): NetworkResult<Unit> {
@@ -33,7 +33,8 @@ class AuthenticationService @Inject constructor(
             )
 
             return if (response.isSuccessful) {
-                _userId.postValue(response.body())
+                _userId.postValue(response.body()!!.userId)
+                _token.postValue(response.body()!!.token)
                 NetworkResult.Success(Unit)
             } else {
                 Log.d(TAG, "login error")
