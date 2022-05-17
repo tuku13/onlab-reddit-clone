@@ -26,6 +26,7 @@ import hu.tuku13.onlab_reddit_clone.ui.screen.edit_group.EditGroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.group.GroupScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.HomeScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.messages.MessagesScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.other_profile.OtherProfileScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.post.PostScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.profile.ProfileScreen
 import hu.tuku13.onlab_reddit_clone.ui.screen.search_group.SearchGroupScreen
@@ -53,7 +54,8 @@ fun MainScreen(
     Scaffold(
         topBar = {
             when (route.value) {
-                is Route.GroupRoute -> {}
+                is Route.GroupRoute,
+                is Route.OtherProfileRoute -> {}
                 is Route.EditGroupRoute,
                 is Route.CreatePostRoute,
                 is Route.PostRoute,
@@ -212,6 +214,21 @@ fun MainScreen(
                     val groupId = it.arguments?.getLong("groupId") ?: 0L
                     EditGroupScreen(
                         groupId = groupId,
+                        navigationService = navigationService
+                    )
+                }
+                composable(
+                    route = Route.OtherProfileRoute.navigation,
+                    arguments = listOf(
+                        navArgument("userId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) {
+                    val userId = it.arguments?.getLong("userId") ?: 0L
+
+                    OtherProfileScreen(
+                        userId = userId,
                         navigationService = navigationService
                     )
                 }

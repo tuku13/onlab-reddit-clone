@@ -45,7 +45,7 @@ class AuthenticationService @Inject constructor(
         }
     }
 
-    fun logout() {
+    suspend fun logout() {
         _userId.value = 0
     }
 

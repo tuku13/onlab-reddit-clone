@@ -19,7 +19,9 @@ import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfoCard(
-    user: User
+    user: User,
+    isMineProfile: Boolean,
+    onLogout: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -28,6 +30,8 @@ fun InfoCard(
         containerColor = Extended.surface2,
         shape = RectangleShape
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         Column {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -36,10 +40,13 @@ fun InfoCard(
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth()
             ) {
-
                 ProfileImage(user)
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(
+                    modifier = Modifier
+                        .width(8.dp)
+                        .fillMaxWidth()
+                )
 
                 Text(
                     text = user.name,
@@ -47,27 +54,27 @@ fun InfoCard(
                     color = MaterialTheme.colorScheme.onSurface,
                 )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OutlinedButton(text = "Logout") {
+                if (isMineProfile) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedButton(text = "Logout") {
+                            onLogout()
+                        }
 
-                    }
+                        Spacer(modifier = Modifier.width(8.dp))
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                        FilledButton(text = "Edit Bio") {
 
-                    FilledButton(text = "Edit Bio") {
-
+                        }
                     }
                 }
             }
 
             Text(
-                text = user.bio,
+                text = user.bio.ifBlank { "An empty profile" },
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(16.dp)

@@ -24,11 +24,14 @@ fun ProfileScreen(
 ) {
     val user = viewModel.user.observeAsState()
     val posts = viewModel.posts.observeAsState(emptyList())
+    val isMineProfile = viewModel.isMineProfile.observeAsState(false)
 
     LaunchedEffect(viewModel) {
         viewModel.userId = userId
         viewModel.refresh()
     }
+
+    // TODO üzenet küldés gomb ami átnavigál
 
     LazyColumn(
         verticalArrangement = Arrangement.Center,
@@ -39,6 +42,7 @@ fun ProfileScreen(
             user.value?.let {
                 ProfileBannerImage(
                     imageUrl = it.profileImage,
+                    isMineProfile = isMineProfile.value,
                     onClick = { }
                 )
             }
@@ -46,7 +50,11 @@ fun ProfileScreen(
 
         item {
             user.value?.let {
-                InfoCard(it)
+                InfoCard(
+                    user = it,
+                    isMineProfile = isMineProfile.value,
+                    onLogout = { viewModel.logout() }
+                )
             }
         }
 

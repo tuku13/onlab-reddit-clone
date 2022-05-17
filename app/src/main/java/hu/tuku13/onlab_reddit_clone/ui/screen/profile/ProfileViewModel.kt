@@ -32,6 +32,10 @@ class ProfileViewModel @Inject constructor(
     val posts: LiveData<List<Post>>
         get() = _posts
 
+    private var _isMineProfile: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isMineProfile: LiveData<Boolean>
+        get() = _isMineProfile
+
     var userId: Long = 0L
 
     fun refresh() {
@@ -41,8 +45,13 @@ class ProfileViewModel @Inject constructor(
 
     private fun getUser() {
         viewModelScope.launch {
-            val user = userRepository.getUser(userId)
-            _user.postValue(user)
+            when (val response = userRepository.getUser(userId)) {
+                is NetworkResult.Success -> {
+                    _user.postValue(response.value)
+                    _isMineProfile.postValue(response.value.id == authenticationService.userId.value)
+                }
+                is NetworkResult.Error -> Log.d("ProfileVM", "${response.exception}")
+            }
         }
     }
 
@@ -72,6 +81,13 @@ class ProfileViewModel @Inject constructor(
                 is NetworkResult.Success -> getPosts()
                 is NetworkResult.Error -> Log.d(TAG, response.exception.toString())
             }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch(Dispatchers.IO) {
+            authenticationService.logout()
+            // TODO teljesen megírni
         }
     }
 }

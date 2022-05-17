@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.ui.screen.authentication
+package hu.tuku13.onlab_reddit_clone.ui.screen.authentication.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import hu.tuku13.onlab_reddit_clone.ui.screen.authentication.login.LoginScreen
+import hu.tuku13.onlab_reddit_clone.ui.screen.authentication.registration.RegisterScreen
 import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 
 @OptIn(ExperimentalMaterial3Api::class)

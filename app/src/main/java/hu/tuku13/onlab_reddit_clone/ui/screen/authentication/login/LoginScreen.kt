@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.ui.screen.authentication
+package hu.tuku13.onlab_reddit_clone.ui.screen.authentication.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions

@@ -105,4 +105,14 @@ sealed class Route(
             const val navigation = "edit_group/{groupId}"
         }
     }
+
+    class OtherProfileRoute(val userId: Long) : Route(
+        title = "Other profile",
+        route = "other_profile/$userId",
+        navigation = "other_profile/{userId}"
+    ) {
+        companion object {
+            const val navigation = "other_profile/{userId}"
+        }
+    }
 }

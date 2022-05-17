@@ -66,7 +66,12 @@ fun PostTitleBar(
             )
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
+                    navigationService.navigate(
+                        Route.OtherProfileRoute(post.user.id)
+                    )
+                }
             ) {
                 Text(
                     text = post.user.name,
@@ -108,7 +113,9 @@ fun PostTitleBar(
                             )
                         },
                         onClick = {
-                            // TODO navigation to edit screen
+                            navigationService.navigate(
+                                Route.EditGroupRoute(post.groupId)
+                            )
                         }
                     )
                     DropdownMenuItem(

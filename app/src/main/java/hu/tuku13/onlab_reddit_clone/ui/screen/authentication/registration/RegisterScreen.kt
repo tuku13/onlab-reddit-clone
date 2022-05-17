@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.ui.screen.authentication
+package hu.tuku13.onlab_reddit_clone.ui.screen.authentication.registration
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
