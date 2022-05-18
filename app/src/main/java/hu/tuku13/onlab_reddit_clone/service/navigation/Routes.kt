@@ -49,7 +49,7 @@ sealed class Route(
         title = partnerUserName,
         route = "conversation_screen/$partnerUserId/$partnerUserName/${
             URLEncoder.encode(
-                partnerProfileImageUrl,
+                partnerProfileImageUrl.ifBlank { "https://picsum.photos/40" },
                 StandardCharsets.UTF_8.toString()
             )
         }",

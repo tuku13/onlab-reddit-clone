@@ -25,9 +25,6 @@ fun ProfileBannerImage(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        Log.d("imageTest", "erteke: $imageUrl")
-        Log.d("imageTest", "isBlank: ${imageUrl.isBlank()}")
-
         if (imageUrl.isBlank()) {
             GlideImage(
                 imageModel = Image(

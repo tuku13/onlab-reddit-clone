@@ -24,7 +24,6 @@ fun MessagesScreen(
     ) {
         items(contacts.value?.size ?: 0) { index ->
             val contact = contacts.value!![index]
-            val profileImageUrl = if (contact.profileImageUrl != "") contact.profileImageUrl else "https://picsum.photos/40"
 
             ContactCard(
                 contact = contact,
@@ -33,7 +32,7 @@ fun MessagesScreen(
                         Route.ConversationRoute(
                         partnerUserId = it,
                         partnerUserName = contact.name,
-                        partnerProfileImageUrl = profileImageUrl
+                        partnerProfileImageUrl = contact.profileImageUrl
                     ))
                 }
             )

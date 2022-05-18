@@ -21,7 +21,8 @@ import hu.tuku13.onlab_reddit_clone.ui.theme.Extended
 fun InfoCard(
     user: User,
     isMineProfile: Boolean,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onSendMessage: (User) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -69,6 +70,17 @@ fun InfoCard(
                         FilledButton(text = "Edit Bio") {
 
                         }
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        FilledButton(
+                            text = "Send Message",
+                            onClick = { onSendMessage(user) }
+                        )
                     }
                 }
             }
