@@ -66,10 +66,10 @@ interface RedditCloneApi {
     suspend fun isUserAlreadySubscribed(@Path("group-id") groupId: Long, @Query("userId") userId: Long): Response<Boolean>
 
     @POST("/groups/{group-id}/subscribe")
-    suspend fun subscribe(@Path("group-id") groupId: Long, @Body form: UserFromDTO): Response<Unit>
+    suspend fun subscribe(@Path("group-id") groupId: Long): Response<Unit>
 
     @POST("/groups/{group-id}/unsubscribe")
-    suspend fun unsubscribe(@Path("group-id") groupId: Long, @Body form: UserFromDTO): Response<Unit>
+    suspend fun unsubscribe(@Path("group-id") groupId: Long): Response<Unit>
 
     @DELETE("/posts/{post-id}/delete")
     suspend fun deletePost(@Path("post-id") postId: Long, @Query("userId") userId: Long): Response<Unit>

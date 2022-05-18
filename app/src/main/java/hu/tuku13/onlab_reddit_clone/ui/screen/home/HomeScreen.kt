@@ -17,7 +17,6 @@ import hu.tuku13.onlab_reddit_clone.domain.model.PostSorting
 import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.components.ChipGroup
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigationService: NavigationService,

@@ -54,18 +54,6 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAuthenticationApi(
-        moshi: Moshi
-    ): AuthenticationApi {
-        return Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(Constants.BASE_URL)
-            .build()
-            .create(AuthenticationApi::class.java)
-    }
-
-    @Singleton
-    @Provides
     fun providePostRepository(
         api: RedditCloneApi,
         authenticationService: AuthenticationService

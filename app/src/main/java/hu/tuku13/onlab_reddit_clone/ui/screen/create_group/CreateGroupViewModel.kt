@@ -48,7 +48,6 @@ class CreateGroupViewModel @Inject constructor(
 
             when (val response = groupRepository.createGroup(
                 GroupForm(
-                    userId = authenticationService.userId.value!!,
                     groupName = groupName,
                     description = description,
                     imageUrl = imageUrl

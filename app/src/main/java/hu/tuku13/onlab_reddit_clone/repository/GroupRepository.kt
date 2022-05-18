@@ -7,7 +7,6 @@ import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.service.file.FileService
 import hu.tuku13.onlab_reddit_clone.network.model.GroupForm
 import hu.tuku13.onlab_reddit_clone.network.model.GroupDTO
-import hu.tuku13.onlab_reddit_clone.network.model.UserFromDTO
 import hu.tuku13.onlab_reddit_clone.service.api.RedditCloneApi
 import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.util.NetworkResult
@@ -53,7 +52,6 @@ class GroupRepository @Inject constructor(
             }
 
             val form = GroupForm(
-                userId = userId,
                 groupName = name,
                 description = description,
                 imageUrl = url
@@ -116,9 +114,9 @@ class GroupRepository @Inject constructor(
             ).body() ?: false
 
             val response = if (userSubscribedResponse) {
-                api.unsubscribe(groupId, UserFromDTO(userId))
+                api.unsubscribe(groupId)
             } else {
-                api.subscribe(groupId, UserFromDTO(userId))
+                api.subscribe(groupId)
             }
 
             if (response.isSuccessful) {

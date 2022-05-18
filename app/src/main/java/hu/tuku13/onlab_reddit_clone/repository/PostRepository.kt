@@ -155,6 +155,7 @@ class PostRepository @Inject constructor(
     }
 
     suspend fun getSubscribedPosts(userId: Long): NetworkResult<List<Post>> {
+        Log.d("EOFE", "getSubscribedPosts")
         return try {
             val postDTOs = api.getSubscribedPosts(userId).body()
                 ?: return NetworkResult.Error(Exception("Post not found."))
@@ -180,6 +181,7 @@ class PostRepository @Inject constructor(
                 )
             })
         } catch (e: Exception) {
+            Log.d("EOFE", "catch: $e")
             NetworkResult.Error(e)
         }
     }
@@ -240,10 +242,7 @@ class PostRepository @Inject constructor(
         return try {
             val response = api.likePost(
                 postId,
-                LikeFormDTO(
-                    userId = userId,
-                    value = likeValue.value
-                )
+                LikeFormDTO(likeValue.value)
             )
 
             Log.d("likePost", "status: ${response.code()}")

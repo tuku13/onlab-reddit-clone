@@ -46,7 +46,7 @@ class AuthenticationService @Inject constructor(
     }
 
     suspend fun logout() {
-        _userId.value = 0
+        _userId.postValue(0)
     }
 
     suspend fun register(

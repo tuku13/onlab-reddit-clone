@@ -52,7 +52,6 @@ class ConversationViewModel @Inject constructor(
     fun sendMessage(partnerUserName: String, message: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val success = messageRepository.sendMessage(MessageForm(
-                senderId = authenticationService.userId.value ?: 0,
                 recipientName = partnerUserName,
                 text = message
             ))
