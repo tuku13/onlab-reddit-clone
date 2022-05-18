@@ -37,8 +37,7 @@ fun AuthenticationScreen() {
                     onRegister = { authenticationState = AuthenticationState.REGISTER }
                 )
                 AuthenticationState.REGISTER -> RegisterScreen(
-                    onLogin = { authenticationState = AuthenticationState.LOGIN },
-                    onRegister = { }
+                    toLoginScreen = { authenticationState = AuthenticationState.LOGIN },
                 )
             }
         }

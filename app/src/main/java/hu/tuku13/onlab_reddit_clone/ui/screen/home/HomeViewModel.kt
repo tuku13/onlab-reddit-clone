@@ -59,7 +59,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = postRepository.getSubscribedPosts(authenticationService.userId.value ?: 0L)) {
                 is NetworkResult.Success -> {
-                    delay(1000L) // TODO kivenni végleges alkalmazásból
 
                     _posts.postValue(result.value.sorted(postSorting.value))
 

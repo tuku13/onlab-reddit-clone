@@ -1,28 +1,45 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.authentication.registration
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Observer
 import hu.tuku13.onlab_reddit_clone.ui.components.FilledButton
 import hu.tuku13.onlab_reddit_clone.ui.components.OutlinedButton
 import hu.tuku13.onlab_reddit_clone.ui.components.TextField
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    onLogin: () -> Unit,
-    onRegister: () -> Unit
+    toLoginScreen: () -> Unit,
+    viewModel: RegistrationViewModel = hiltViewModel()
 ) {
     var username by remember { mutableStateOf("") }
     var emailAddress by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer: Observer<Boolean?> = Observer {
+            if(it == true) {
+                toLoginScreen()
+            }
+        }
+
+        viewModel.success.observe(lifecycleOwner, observer)
+
+        onDispose {
+            viewModel.success.removeObserver(observer)
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -53,7 +70,7 @@ fun RegisterScreen(
             TextField(
                 value = emailAddress,
                 onValueChange = { emailAddress = it },
-                label = "Username",
+                label = "Email Address",
                 keyboardType = KeyboardType.Email
             )
 
@@ -77,21 +94,27 @@ fun RegisterScreen(
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             OutlinedButton(
                 text = "Login",
-                onClick = onLogin
+                onClick = toLoginScreen
             )
 
             Spacer(modifier = Modifier.width(8.dp))
 
             FilledButton(
                 text = "Create Account",
-                onClick = onRegister
+                onClick = {
+                    if (password == confirmPassword) {
+                        viewModel.register(username, password, emailAddress)
+                    }
+                }
             )
 
         }
