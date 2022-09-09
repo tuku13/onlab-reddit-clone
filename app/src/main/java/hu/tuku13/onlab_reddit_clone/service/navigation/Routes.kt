@@ -1,4 +1,4 @@
-package hu.tuku13.onlab_reddit_clone.navigation
+package hu.tuku13.onlab_reddit_clone.service.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -15,31 +15,20 @@ sealed class Route(
     val icon: ImageVector = Icons.Outlined.Home,
     val navigation: String = route
 ) {
+    class GroupRoute(val groupId: Long, val groupName: String) : Route(
+        title = groupName,
+        route = "group/$groupId",
+        navigation = "group/{groupId}"
+    ) {
+        companion object {
+            const val navigation = "group/{groupId}"
+        }
+    }
     object HomeRoute : Route(
         title = "Home",
         route = "home_screen",
         icon = Icons.Outlined.Home,
     )
-
-    object CreateGroupRoute : Route(
-        title = "Create Group",
-        route = "create_group_screen",
-        icon = Icons.Default.Add,
-    )
-
-    object MessagesRoute :
-        Route(
-            title = "Messages",
-            route = "messages_screen",
-            icon = Icons.Default.ChatBubbleOutline,
-        )
-
-    object ProfileRoute :
-        Route(
-            title = "Profile",
-            route = "profile_screen",
-            icon = Icons.Default.PersonOutline,
-        )
 
     class ConversationRoute(
         partnerUserId: Long,
@@ -61,15 +50,26 @@ sealed class Route(
         }
     }
 
-    class GroupRoute(val groupId: Long, val groupName: String) : Route(
-        title = groupName,
-        route = "group/$groupId",
-        navigation = "group/{groupId}"
-    ) {
-        companion object {
-            const val navigation = "group/{groupId}"
-        }
-    }
+
+    object CreateGroupRoute : Route(
+        title = "Create Group",
+        route = "create_group_screen",
+        icon = Icons.Default.Add,
+    )
+
+    object MessagesRoute :
+        Route(
+            title = "Messages",
+            route = "messages_screen",
+            icon = Icons.Default.ChatBubbleOutline,
+        )
+
+    object ProfileRoute :
+        Route(
+            title = "Profile",
+            route = "profile_screen",
+            icon = Icons.Default.PersonOutline,
+        )
 
     object SearchGroupRoute : Route(
         title = "",

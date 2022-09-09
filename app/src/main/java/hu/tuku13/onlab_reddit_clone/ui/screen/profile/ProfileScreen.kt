@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import hu.tuku13.onlab_reddit_clone.navigation.Route
+import hu.tuku13.onlab_reddit_clone.service.navigation.Route
 import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
 import hu.tuku13.onlab_reddit_clone.ui.screen.home.PostCard
 
@@ -55,7 +55,8 @@ fun ProfileScreen(
                     onLogout = { viewModel.logout() },
                     onSendMessage = { partnerUser ->
                         navigationService.navigate(Route.MessagesRoute)
-                        navigationService.navigate(Route.ConversationRoute(
+                        navigationService.navigate(
+                            Route.ConversationRoute(
                             partnerUserId = partnerUser.id,
                             partnerUserName = partnerUser.name,
                             partnerProfileImageUrl = partnerUser.profileImage

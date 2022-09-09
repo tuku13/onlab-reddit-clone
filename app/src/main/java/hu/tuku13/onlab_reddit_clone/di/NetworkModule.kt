@@ -16,6 +16,7 @@ import hu.tuku13.onlab_reddit_clone.repository.PostRepository
 import hu.tuku13.onlab_reddit_clone.service.api.AuthenticationApi
 import hu.tuku13.onlab_reddit_clone.service.authentication.AuthInterceptor
 import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
+import hu.tuku13.onlab_reddit_clone.service.authentication.LogoutInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -42,6 +43,7 @@ class NetworkModule {
     ): RedditCloneApi {
         val client = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(authenticationService))
+            .addInterceptor(LogoutInterceptor(authenticationService))
             .build()
 
         return Retrofit.Builder()

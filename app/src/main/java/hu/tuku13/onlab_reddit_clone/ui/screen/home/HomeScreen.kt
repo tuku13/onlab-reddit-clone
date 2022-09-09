@@ -3,7 +3,6 @@ package hu.tuku13.onlab_reddit_clone.ui.screen.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,8 +23,7 @@ fun HomeScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxHeight()
+        modifier = Modifier.fillMaxHeight()
             .padding(start = 24.dp, end = 24.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
@@ -39,9 +37,7 @@ fun HomeScreen(
         ) {
             LazyColumn{
                 item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                    ) {
+                    Box(Modifier.fillMaxWidth().padding(top = 8.dp)) {
                         ChipGroup(
                             sorting = sorting.value,
                             newOnClick = { viewModel.sort(PostSorting.NEW) },
@@ -55,16 +51,11 @@ fun HomeScreen(
                     PostCard(
                         post = posts.value!![index],
                         navigationService = navigationService,
-                        onLike = { likeValue ->
-                            viewModel.likePost(posts.value!![index], likeValue)
-                        },
-                        onDelete = {
-                            viewModel.deletePost(it)
-                        }
+                        onLike = { likeValue -> viewModel.likePost(posts.value!![index], likeValue) },
+                        onDelete = { viewModel.deletePost(it) }
                     )
                 }
             }
         }
-
     }
 }

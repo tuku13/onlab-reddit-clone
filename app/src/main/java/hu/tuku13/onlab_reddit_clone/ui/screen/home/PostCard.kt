@@ -1,7 +1,6 @@
 package hu.tuku13.onlab_reddit_clone.ui.screen.home
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,16 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import hu.tuku13.onlab_reddit_clone.R
 import hu.tuku13.onlab_reddit_clone.domain.model.LikeValue
 import hu.tuku13.onlab_reddit_clone.domain.model.Post
 import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
-import hu.tuku13.onlab_reddit_clone.navigation.Route
+import hu.tuku13.onlab_reddit_clone.service.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -5,11 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
-import hu.tuku13.onlab_reddit_clone.navigation.Route
 
 
 class NavigationService {
-    private val TAG = "NavigationService"
     var navController: NavHostController? = null
 
     private val routes: MutableSet<Route> = mutableSetOf()
@@ -19,17 +17,11 @@ class NavigationService {
 
     fun navigate(route: Route) {
         _currentRoute.value?.let { routes += it }
-
         _currentRoute.value = route
 
-        Log.d(TAG, "${route.navigation}\n${route.route}")
+        Log.d("NavigationService", "${route.navigation}\n${route.route}")
 
         navController?.navigate(route.route)
-    }
-
-    fun navigateWithPop(route: Route) {
-        popBackStack()
-        navigate(route)
     }
 
     fun popBackStack() {

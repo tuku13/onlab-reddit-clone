@@ -87,7 +87,6 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch(Dispatchers.IO) {
             authenticationService.logout()
-            // TODO teljesen megírni
         }
     }
 }

@@ -132,12 +132,12 @@ class GroupRepository @Inject constructor(
 
     suspend fun uploadImage(imageUri: Uri): NetworkResult<String> {
         return try {
-            val result = fileService.loadImage(imageUri)
-            if (result !is NetworkResult.Success) {
+            val image = fileService.loadImage(imageUri)
+            if (image !is NetworkResult.Success) {
                 return NetworkResult.Error(Exception("File loading error"))
             }
 
-            val bytes = result.value
+            val bytes = image.value
 
             val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), bytes)
             val body = MultipartBody.Builder().setType(MultipartBody.FORM)

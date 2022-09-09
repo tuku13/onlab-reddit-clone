@@ -3,7 +3,7 @@ package hu.tuku13.onlab_reddit_clone.ui.scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
-import hu.tuku13.onlab_reddit_clone.navigation.Route
+import hu.tuku13.onlab_reddit_clone.service.navigation.Route
 
 @Composable
 fun BottomBar(

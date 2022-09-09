@@ -17,7 +17,7 @@ import hu.tuku13.onlab_reddit_clone.ui.components.ImageUploader
 import hu.tuku13.onlab_reddit_clone.ui.components.OutlinedButton
 import hu.tuku13.onlab_reddit_clone.ui.components.TextField
 import hu.tuku13.onlab_reddit_clone.ui.components.TonalButton
-import hu.tuku13.onlab_reddit_clone.navigation.Route
+import hu.tuku13.onlab_reddit_clone.service.navigation.Route
 
 @Composable
 fun CreateGroupScreen(

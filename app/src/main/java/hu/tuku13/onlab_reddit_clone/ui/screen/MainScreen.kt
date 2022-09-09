@@ -16,7 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
-import hu.tuku13.onlab_reddit_clone.navigation.Route
+import hu.tuku13.onlab_reddit_clone.service.navigation.Route
 import hu.tuku13.onlab_reddit_clone.service.authentication.AuthenticationService
 import hu.tuku13.onlab_reddit_clone.ui.scaffold.*
 import hu.tuku13.onlab_reddit_clone.ui.screen.conversation.ConversationScreen
@@ -122,6 +122,20 @@ fun MainScreen(
                 composable(Route.HomeRoute.navigation) {
                     HomeScreen(navigationService)
                 }
+                composable(
+                    route = Route.GroupRoute.navigation,
+                    arguments = listOf(
+                        navArgument("groupId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) {
+                    val groupId = it.arguments?.getLong("groupId") ?: 0L
+                    GroupScreen(
+                        groupId = groupId,
+                        navigationService = navigationService
+                    )
+                }
                 composable(Route.CreateGroupRoute.navigation) {
                     CreateGroupScreen(navigationService)
                 }
@@ -159,20 +173,6 @@ fun MainScreen(
                     SearchGroupScreen(
                         navigationService = navigationService,
                         viewModel = searchGroupViewModel
-                    )
-                }
-                composable(
-                    route = Route.GroupRoute.navigation,
-                    arguments = listOf(
-                        navArgument("groupId") {
-                            type = NavType.LongType
-                        }
-                    )
-                ) {
-                    val groupId = it.arguments?.getLong("groupId") ?: 0L
-                    GroupScreen(
-                        groupId = groupId,
-                        navigationService = navigationService
                     )
                 }
                 composable(

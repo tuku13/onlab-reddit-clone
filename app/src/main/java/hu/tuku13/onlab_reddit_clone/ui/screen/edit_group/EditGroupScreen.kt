@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Observer
 import hu.tuku13.onlab_reddit_clone.domain.model.Group
 import hu.tuku13.onlab_reddit_clone.service.navigation.NavigationService
-import hu.tuku13.onlab_reddit_clone.navigation.Route
+import hu.tuku13.onlab_reddit_clone.service.navigation.Route
 import hu.tuku13.onlab_reddit_clone.ui.components.ImageUploader
 import hu.tuku13.onlab_reddit_clone.ui.components.OutlinedButton
 import hu.tuku13.onlab_reddit_clone.ui.components.TextField
